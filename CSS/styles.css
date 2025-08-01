@@ -1,0 +1,344 @@
+body {
+    font-family: 'Chau Philomene One', sans-serif;
+}
+
+/* Reset de márgenes y box-sizing */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilos del header */
+.header-box {
+    background-color: #42ff00;
+    color: rgb(0, 0, 0);
+    display: flex;  /* Alinear elementos en fila */
+    align-items: center;  /* Centrar verticalmente */
+    padding: 15px 20px;  /* Espaciado interno */
+    width: 100%;  /* Ancho del cuadro */
+    margin: 20px auto;  /* Centrarlo en la pantalla */
+    border-radius: 0px;  /* Bordes redondeados */
+    border: 1px solid black;
+}
+.header-logo {
+    width: 50px;  
+    height: auto;  /* Mantiene la proporción */
+}
+.title-container {
+    display: flex;
+    align-items: center; /* Alinea título e icono verticalmente */
+    margin-left: auto; /* Empuja este contenedor a la derecha */
+    gap: 10px; /* Espacio entre el título y la nueva imagen */
+}
+
+/* Estilo del título */
+.header-title {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.header-icon {
+    width: 30px;  
+    height: auto; 
+}
+.bienvenida {
+    width: 80%;  /* Ancho del texto */
+    margin: 20px auto;  /* Centrarlo en la pantalla */
+    padding: 20px;
+    text-align: center;  /* Centrar el texto */
+    font-size: 18px;
+    color: black;  /* Color oscuro para mejor lectura */
+}
+.crear-usuario{
+    display: inline; /* Hace que el texto se mantenga en la misma línea */
+    font-size: 18px;
+    color: #00e8ff;
+    text-decoration: underline;
+    margin-left: 5px; /* Agrega un pequeño espacio entre los textos */
+}
+
+.botones-contenedor {
+    display: flex;
+    justify-content: center; /* Centra los botones horizontalmente */
+    align-items: center; /* Alinea los botones verticalmente */
+    gap: 15px; /* Espacio entre los botones */
+    margin-top: 20px; /* Espacio superior */
+    margin-bottom: 20px;
+}
+
+.botones i {
+    margin-right: 8px; /* Agrega espacio entre el icono y el texto */
+}
+
+.botones {
+    font-family: 'Chau Philomene One', sans-serif;
+    width: 150px; /* Ancho fijo */
+    height: 50px; /* Alto fijo */
+    padding: 10px;
+    font-size: 16px;
+    text-align: center;
+    background-color: transparent; /* Sin color de fondo */
+    color: black; /* Color del texto */
+    border: 2px solid black; /* Borde azul */
+    border-radius: 5px;
+    cursor: pointer;
+}
+/* Estilo para el botón */
+.boton-enviar{
+    font-family: 'Chau Philomene One', sans-serif;
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #00e8ff;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.boton-debajo {
+    display: block;
+    margin: 0 auto; /* Centra horizontalmente */
+}
+
+/* Efecto al pasar el mouse */
+.botones:hover {
+    background-color: #a9aaab; /* Azul al pasar el mouse */
+    color: black; 
+}
+
+.linea {
+    width: 40%; /* Define el ancho */
+    height: 3px; /* Grosor de la línea */
+    background-color: #42ff00; /* Color de la línea */
+    margin: 20px auto; /* Centra la línea */
+    border-radius: 2px; /* Bordes redondeados */
+}
+
+.iniciar-sesion {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    color:rgb(0, 0, 0);
+    margin-bottom: 0px;
+}
+
+.formulariouno {
+    display: flex;
+    flex-direction: column; /* Asegura que los elementos estén en columna */
+    width: 300px; /* Ancho del formulario */
+    margin: 0px auto; /* Centra el formulario horizontalmente */
+    padding: 10px 20px 20px 20px;
+    border: 2px solid white; 
+    border-radius: 10px; 
+    background-color: white; 
+}
+
+/* Estilo para las etiquetas */
+label {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 10px;
+    color: black;
+}
+
+/* Estilo para los campos de entrada */
+input {
+    font-family: 'Chau Philomene One', sans-serif;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 18px;
+    width: 100%; /* Asegura que el campo ocupe todo el ancho disponible */
+    box-sizing: border-box; /* Evita que el padding aumente el tamaño */
+}
+
+
+button:hover {
+    background-color: #42ff00; /* Cambio de color al pasar el mouse */
+}
+.olvidaste-contraseña{
+    text-align: center;
+    font-size: 18px;
+    color:#00e8ff;
+    margin-bottom: 0px;
+    text-decoration: underline;
+}
+
+.decoracion img {
+    position: absolute;
+    width: 35vw;  /* Usa un porcentaje del ancho de la ventana */
+    max-width: 1000px;  /* Tamaño máximo */
+    height: auto;  /* Mantiene la proporción */
+    opacity: 0.8;  /* Opcional, si quieres que se vea más suave */
+}
+
+/* Esquina inferior izquierda */
+.esquina-inferior-izquierda {
+    left: 0;
+    bottom: 0;
+}
+
+/* Esquina inferior derecha (volteada) */
+.esquina-inferior-derecha {
+    right: 0;
+    bottom: 0;
+    transform: scaleX(-1);  /* Voltea horizontalmente */
+}
+
+#usuario {
+    padding: 10px 35px 10px 10px; /* espacio a la derecha para la imagen */
+    font-size: 18px;
+    line-height: 20px;
+    box-sizing: border-box;
+    position: relative;
+  }
+  
+  .input-icono-uno{
+    position: relative;
+  }
+
+  #img-correo {
+  position: absolute;
+  top: 55%;
+  right: 10px;
+  transform: translateY(-50%);
+  height: 16px;
+  width: 16px;
+  pointer-events: none;
+  display: none; /* Aparece cuando sea necesario */
+  }
+
+  #img-invalido {
+  position: absolute;
+  top: 50%;
+  right: -115px;
+  transform: translateY(-50%);
+  height: 100px;
+  width: 150px;
+  pointer-events: none;
+  display: none; /* Aparece cuando sea necesario */
+  }
+
+
+/* segunda pagina*/
+
+.crear-cuenta{
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    color:rgb(0, 0, 0);
+    margin-bottom: 0px;}
+
+.regresar{
+    text-align: center;
+    font-size: 18px;
+    color:#00e8ff;
+    margin-top: 20px;
+    text-decoration: underline;}
+
+    .formulario{
+    max-width: 700px;
+    margin: 70px auto 0 auto; /* Top: 70px, horizontal: auto, bottom: 0 */;}
+
+  .boton-registrarse{
+    font-family: 'Chau Philomene One', sans-serif;
+    padding: 10px;
+    background-color: #00e8ff;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    display: block;
+    margin: 20px auto 0 auto;}
+
+  .input-icono{
+    position: relative;}
+
+  #img-nombres, #img-id, #img-apellidos, #img-telefono, #img-correo-uno, #img-contrasena, #img-contrasenados {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  height: 16px;
+  width: 16px;
+  pointer-events: none;
+  display: none; /* Aparece cuando sea necesario */
+  }
+
+
+  #img-invalido-nombres, #img-invalido-id, #img-invalido-apellidos, #img-invalido-telefono, #img-invalido-correo, #img-invalido-contrasena, #img-invalido-contrasenados {
+  position: absolute;
+  top: 40%;
+  right: -115px;
+  transform: translateY(-50%);
+  height: 100px;
+  width: 150px;
+  pointer-events: none;
+  display: none; /* Aparece cuando sea necesario */
+  }
+
+  /* Tercera Pagina- Pagina de inicio  */
+
+.header-box-pp {
+    background-color: #42ff00;
+    color: rgb(0, 0, 0);
+    display: flex;
+    align-items: center; 
+    justify-content: space-between;
+    padding: 15px 20px;
+    width: 100%;
+    margin: 20px auto;
+    border-radius: 0px;
+    border: 1px solid black;
+    position: relative; /* Necesario para centrar el h1 con posición absoluta si se necesita */
+}
+
+/* Bloques izquierdo y derecho */
+.header-izquierda, .header-derecha {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Centrado absoluto del h1 */
+.header-title-pagina-principal {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 30px;
+    font-weight: bold;
+}
+
+/* Iconos */
+.header-logo-pp {
+    width: 70px;
+    height: auto;
+}
+.header-usuario {
+    width: 40px;
+    height: 40px;
+}
+.header-buscar, .header-notificaciones, .header-carrito, .header-contactanos {
+    width: 40px;
+    height: auto;
+}
+
+.contenedor-izquierda {
+    width: 450px;        /* Ancho personalizado */
+    height: 400px;       /* Alto personalizado */
+    background-color: #ffffff; /* Color de fondo */
+    border: 2px solid #000000; /* Borde negro */
+    border-radius: 10px; /* Bordes redondeados */
+    padding: 5px;       /* Espacio interno */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra */
+    overflow: auto;
+    margin: 10px;
+}
+
+.scroll-horizontal{
+    display: flex;
+}
