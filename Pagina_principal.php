@@ -43,7 +43,7 @@ if (!isset($_SESSION['usuario'])) {
             <h2>Acetamimaifriend</h2>
             <p>Esta es la información que va dentro del contenedor. Puedes agregar texto, imágenes, botones, lo que quieras.</p>
         </div>
-        <!-- Repite o reemplaza dinámicamente con PHP -->
+
     </div>
 
     <script src="JS/main.js"></script>
