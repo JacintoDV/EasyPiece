@@ -19,11 +19,7 @@ if ($resultado->num_rows === 1) {
     if (password_verify($contrasena, $usuario['contrasena'])) {
         $_SESSION['usuario'] = $correo;
         header("Location: Pagina_principal.php");
-        echo "Credenciales correctas";
         exit;
-    }
-    else {
-       header("Location: Creacion_Cuenta.php");
     }
 }
 

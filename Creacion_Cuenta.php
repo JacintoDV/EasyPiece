@@ -20,10 +20,7 @@
                 <h1 class="header-title">Contáctanos</h1> <!-- Título -->
                 <img src="img/IconoContactanos.png" alt="Icono" class="header-icon"> <!-- Nueva imagen junto al título -->
             </div>
-        </div>
-
-        
-        
+        </div>  
     </header>
 
     <p class="crear-cuenta">Crear Cuenta</p>
@@ -119,7 +116,7 @@
               method: 'POST',
               body: formData
           })
-          .then(res => res.text()) // puedes usar res.json() si vas a responder con JSON
+          .then(res => res.text())
           .then(respuesta => {
               alert(respuesta); // Muestra lo que devuelva el PHP
           })
