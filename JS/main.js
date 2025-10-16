@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+
     const input = document.getElementById("usuario");
     const imgCorreo = document.getElementById("img-correo");
     const imgInfo = document.getElementById("img-invalido");
@@ -88,6 +89,17 @@ document.addEventListener("DOMContentLoaded", () => {
         locale: {
         firstDayOfWeek: 1
         }
+    });
+
+    notificaciones.forEach(notif => {
+        notif.addEventListener("click", () => {
+            const titulo = notif.querySelector(".titulo-notificacion").innerText;
+            const info = notif.querySelector(".info-notificacion").innerText;
+            alert("Has clic en: " + titulo + "\n" + info);
+
+            notif.classList.toggle("expanded");
+            notif.classList.toggle("collapsed");
+        });
     });
 
 

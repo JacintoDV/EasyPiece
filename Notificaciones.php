@@ -28,7 +28,7 @@ if (!isset($_SESSION['usuario'])) {
                 <img src="img/IconoUsuario.png" alt="Usuario" class="header-usuario">
             </div>
             
-            <h1 class="header-title-pagina-principal">Página Principal</h1>
+            <h1 class="header-title-pagina-principal">Notificaciones</h1>
 
             <div class="items-derecha">
                 <img src="img/Buscar.png" alt="Buscar" class="header-buscar">
@@ -39,17 +39,24 @@ if (!isset($_SESSION['usuario'])) {
         </div> 
     </header>
 
-         <?php
-         echo '<div class="scroll-horizontal">';
-            for ($i = 1; $i <= 100; $i++) { // crea 5 copias
-                echo '
-                <div class="contenedor-izquierda">
-                    <h2>Acetamimaifriend ' . $i . '</h2>
-                    <p>Esta es la información número ' . $i . '.</p>
-                </div>'; }
-         echo '</div>';
-  ?>
-
+    <?php
+    echo '<div class="scroll-notificaciones">';
+    for ($i = 1; $i <= 100; $i++) {
+        echo '
+        <div class="contenedor-notificaciones collapsed" >
+            <h2 class="titulo-notificacion">Notificación ' . $i . '</h2>
+            <p class="info-notificacion">
+                Esta es la información número ' . $i . '. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            </p>
+        </div>';
+    }
+    echo '</div>';
+    ?>
 
     <script src="JS/main.js"></script>
 </body>

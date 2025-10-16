@@ -327,18 +327,88 @@ button:hover {
     height: auto;
 }
 
-.contenedor-izquierda {
-    width: 450px;        /* Ancho personalizado */
-    height: 400px;       /* Alto personalizado */
-    background-color: #ffffff; /* Color de fondo */
-    border: 2px solid #000000; /* Borde negro */
-    border-radius: 10px; /* Bordes redondeados */
-    padding: 5px;       /* Espacio interno */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra */
-    overflow: auto;
-    margin: 10px;
+.scroll-horizontal {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 20px;
 }
 
-.scroll-horizontal{
+.contenedor-izquierda {
+    height: 600px; /* Ajusta la altura según prefieras */
+    background-color: #ffffff;
+    border: 2px solid #000000;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+    text-align: center;
+}
+@media (max-width: 700px) {
+    .header-title-pagina-principal {
+        position: static; /* 👈 deja de ser absoluto */
+        transform: none;
+        width: 100%;
+        text-align: center;
+        font-size: 22px; /* un poco más pequeño para móviles */
+        margin-bottom: 10px;
+    }
+
+    .header-box-pp {
+        display: flex;
+        flex-direction: column; /* pone los elementos en columna */
+        align-items: center;
+    }
+}
+
+/* Notificaciones */
+
+.scroll-notificaciones {
+    display: grid;
+    gap: 0; /* sin espacio entre tarjetas */
+    width: 100%;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Tarjeta base */
+.contenedor-notificaciones {
+    background-color: #ffffff;
+    border: 1px solid transparent;
+    width: 100%;
+    box-sizing: border-box;
     display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 15px;
+    cursor: pointer;
+    overflow: hidden; /* recorta contenido fuera del contenedor */
+}
+
+/* Títulos y texto */
+.titulo-notificacion {
+    font-size: 35px;
+    color: #000;
+    margin: 0;
+    text-align: left;
+}
+
+.info-notificacion {
+    font-size: 30px;
+    color: #333;
+    margin: 5px 0 0 0;
+    text-align: left;
+    line-height: 1.3;
+
+    /* Mostrar solo 2 líneas */
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* cantidad de líneas visibles */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
 }
