@@ -4,10 +4,31 @@ $conn = new mysqli("localhost", "root", "#J4c1nt0", "EasyPiece");
 
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'GET':
-        $result = $conn->query("SELECT * FROM clientes");
-        $data = [];
-        while($row = $result->fetch_assoc()) { $data[] = $row; }
-        echo json_encode($data);
+        if (isset($_GET['correo'])) {
+            // Buscar si el correo existe
+            $correo = $_GET['correo'];
+
+            $stmt = $conn->prepare("SELECT 1 FROM clientes WHERE correo = ? LIMIT 1");
+            $stmt->bind_param("s", $correo);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            echo json_encode($result->num_rows > 0);
+        } else {
+            // Devolver todos los clientes
+            $result = $conn->query("SELECT * FROM clientes");
+            $data = [];
+
+            while ($row = $result->fetch_assoc()) {
+                $data[] = $row;
+            }
+
+            echo json_encode($data);
+        }
+        break;
+
+    default:
+        echo json_encode(["error" => "Método no permitido"]);
         break;
 
     case 'POST':

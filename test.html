@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Test imgNoti</title>
+  <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.20.0.css">
+</head>
+<body>
+  <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
+
+  <script src="https://code.jquery.com/qunit/qunit-2.20.0.js"></script>
+
+  <!-- Simulación de redirección -->
+  <script>
+    let mockHref = ""; // Guardará la última URL a la que "redirige"
+    Object.defineProperty(window, "location", {
+      value: { 
+        get href() { return mockHref; },
+        set href(url) { mockHref = url; } 
+      },
+      writable: true
+    });
+  </script>
+
+  <script src="./JS/Pagina_principal.js"></script>
+
+  <script>
+    QUnit.test("Redirección con clics en imgNoti", function(assert) {
+      document.getElementById("qunit-fixture").innerHTML = `<img id="imgNoti">`;
+
+      window.enDetalle = false;
+      const img = document.getElementById("imgNoti");
+
+      img.click();
+      assert.equal(mockHref, "Notificaciones.php", "primer clic");
+
+      img.click();
+      assert.equal(mockHref, "Pagina_principal.php", "segundo clic");
+    });
+  </script>
+</body>
+</html>
+
+
+
+

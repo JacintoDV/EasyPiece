@@ -239,11 +239,11 @@ button:hover {
     margin-top: 20px;
     text-decoration: underline;}
 
-    .formulario{
-    max-width: 700px;
+.formulario{
+    width: 60%;
     margin: 70px auto 0 auto; /* Top: 70px, horizontal: auto, bottom: 0 */;}
 
-  .boton-registrarse{
+.boton-registrarse{
     font-family: 'Chau Philomene One', sans-serif;
     padding: 10px;
     background-color: #00e8ff;
@@ -255,7 +255,7 @@ button:hover {
     display: block;
     margin: 20px auto 0 auto;}
 
-  .input-icono{
+.input-icono{
     position: relative;}
 
   #img-nombres, #img-id, #img-apellidos, #img-telefono, #img-correo-uno, #img-contrasena, #img-contrasenados {
@@ -280,6 +280,68 @@ button:hover {
   pointer-events: none;
   display: none; /* Aparece cuando sea necesario */
   }
+
+.contenedor-columnas {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.columna {
+  width: 100%;   
+}
+
+/* Cuando la pantalla sea pequeña */
+@media (max-width: 768px) {
+  .contenedor-columnas {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+/* Pantallas grandes → 2 columnas */
+@media (min-width: 1000px) {
+  .columna {
+    width: 49%;
+  }
+}
+
+.divs-paginados {
+  position: relative; 
+}
+
+.divs-paginados input {
+  width: 100%;
+  padding-right: 40px; 
+}
+
+
+.btnVer,
+.btnVerDos {
+  position: absolute;
+  right: 10px;     /*Separación lateral */
+  top: 38px;       /*Ajusta para centrar verticalmente */
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 4px;
+}
+
+/* Evitar fondo en hover */
+.btnVer:hover,
+.btnVerDos:hover {
+  background: none;
+}
+
+/* Evitar resalte al hacer focus */
+.btnVer:focus,
+.btnVerDos:focus {
+  background: none;
+  outline: none;
+}
+
 
   /* Tercera Pagina- Pagina de inicio  */
 
@@ -337,19 +399,66 @@ button:hover {
     padding: 20px;
 }
 
+.imagen-medicamentos {
+  width: 40%;
+  height: auto;
+  max-width: 200px;
+  min-width: 100px;
+  display: block;
+  flex-shrink: 0;
+}
+
 .contenedor-izquierda {
-    height: 600px; /* Ajusta la altura según prefieras */
+    height: auto; /* Ajusta la altura según prefieras */
     background-color: #ffffff;
     border: 2px solid #000000;
     border-radius: 10px;
-    padding: 20px;
+    padding: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     box-sizing: border-box;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
 }
+
+.contenedor-abajo {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    gap: 5px;
+    width: 100%;
+
+}
+
+.texto-derecha{
+    flex: 1;
+    width: 60%;
+    min-width: 200px;
+    text-align: right;
+    align-items: flex-end;
+    display: flex;
+    flex-direction: column;
+    word-wrap: break-word;
+}
+
+.titulo-nombre, .titulo-cantidad, .titulo-laboratorio, .titulo-precio{
+    font-size: 25px;
+    color:#000000;
+}
+
+.info-nombre, .info-cantidad, .info-laboratorio, .info-precio{
+    font-size: 20px;
+    color:#414141;
+}
+
 @media (max-width: 700px) {
     .header-title-pagina-principal {
-        position: static; /* 👈 deja de ser absoluto */
+        position: static; /*deja de ser absoluto */
         transform: none;
         width: 100%;
         text-align: center;
@@ -362,10 +471,21 @@ button:hover {
         flex-direction: column; /* pone los elementos en columna */
         align-items: center;
     }
+
+    .contenedor-abajo {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .texto-derecha {
+        align-items: center;
+    }
 }
+
 
 /* Notificaciones */
 
+/* === CONTENEDOR PRINCIPAL === */
 .scroll-notificaciones {
     display: grid;
     gap: 0; /* sin espacio entre tarjetas */
@@ -374,7 +494,7 @@ button:hover {
     box-sizing: border-box;
 }
 
-/* Tarjeta base */
+/* === TARJETA BASE === */
 .contenedor-notificaciones {
     background-color: #ffffff;
     border: 1px solid transparent;
@@ -386,29 +506,45 @@ button:hover {
     align-items: flex-start;
     padding: 15px;
     cursor: pointer;
-    overflow: hidden; /* recorta contenido fuera del contenedor */
+    overflow: visible;
+    transition: max-height 0.3s ease, border 0.3s ease;
+    max-height: none; /* Altura inicial colapsada */
 }
 
-/* Títulos y texto */
-.titulo-notificacion {
-    font-size: 35px;
-    color: #000;
-    margin: 0;
-    text-align: left;
-}
-
-.info-notificacion {
-    font-size: 30px;
-    color: #333;
-    margin: 5px 0 0 0;
-    text-align: left;
-    line-height: 1.3;
-
-    /* Mostrar solo 2 líneas */
+/* === ESTADO COLAPSADO === */
+.contenedor-notificaciones.collapsed .info-notificacion {
     display: -webkit-box;
     -webkit-line-clamp: 2; /* cantidad de líneas visibles */
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: normal;
+}
+
+/* === ESTADO EXPANDIDO === */
+.contenedor-notificaciones.expanded {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.contenedor-notificaciones.expanded .info-notificacion {
+    display: block; /* mostrar todo el texto */
+    -webkit-line-clamp: unset;
+    overflow: visible;
+    text-overflow: unset;
+}
+
+/* === TEXTOS === */
+.titulo-notificacion {
+    font-size: 25px;
+    color: #000;
+    margin: 0;
+    text-align: left;
+}
+
+.info-notificacion {
+    font-size: 20px;
+    color: #333;
+    margin: 5px 0 0 0;
+    text-align: left;
+    line-height: 1.3;
 }

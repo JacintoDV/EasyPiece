@@ -60,37 +60,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    validarCampoSoloLetras("nombres", "img-nombres", "img-invalido-nombres");
-    validarCampoSoloLetras("apellidos", "img-apellidos", "img-invalido-apellidos");
+  
     
-    const inputID = document.getElementById("id");
-    const imgID = document.getElementById("img-id");
-    const imgInvalidoID = document.getElementById("img-invalido-id");
-    
-    if (inputID && imgID && imgInvalidoID) {
-        inputID.addEventListener("input", () => {
-            const soloNumeros = /^[0-9]+$/;
-    
-            if (soloNumeros.test(inputID.value.trim())) {
-                imgID.style.display = "none";
-                imgInvalidoID.style.display = "none";
-                inputID.classList.remove("input-error");
-            } else {
-                imgID.style.display = "block";
-                imgInvalidoID.style.display = "block";
-                inputID.classList.add("input-error");
-            }
-        });
-    }
-
-    flatpickr("#fecha", {
-        dateFormat: "Y-m-d", // ✅ Este formato es compatible directamente con MySQL
-        allowInput: true,
-        locale: {
-        firstDayOfWeek: 1
-        }
-    });
-
     notificaciones.forEach(notif => {
         notif.addEventListener("click", () => {
             const titulo = notif.querySelector(".titulo-notificacion").innerText;

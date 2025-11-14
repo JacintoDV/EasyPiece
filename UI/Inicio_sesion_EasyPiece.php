@@ -68,7 +68,7 @@
     <footer>
     </footer>
 
-    <script src="JS/main.js" defer></script> 
+    <script src="../JS/main.js" defer></script> 
 
 </body>
 </html>

@@ -32,7 +32,9 @@ if (!isset($_SESSION['usuario'])) {
 
             <div class="items-derecha">
                 <img src="img/Buscar.png" alt="Buscar" class="header-buscar">
-                <img src="img/Notificaciones.png" alt="Notificaciones" class="header-notificaciones">
+                <a href="Notificaciones.php">
+                    <img src="img/Notificaciones.png" alt="Notificaciones" class="header-notificaciones">
+                </a>
                 <img src="img/CarroCompras.png" alt="Carrito" class="header-carrito">
                 <img src="img/IconoContactanos.png" alt="Icono" class="header-contactanos">
             </div>    
@@ -40,17 +42,30 @@ if (!isset($_SESSION['usuario'])) {
     </header>
 
          <?php
-         echo '<div class="scroll-horizontal">';
-            for ($i = 1; $i <= 100; $i++) { // crea 5 copias
-                echo '
-                <div class="contenedor-izquierda">
-                    <h2>Acetamimaifriend ' . $i . '</h2>
-                    <p>Esta es la información número ' . $i . '.</p>
-                </div>'; }
-         echo '</div>';
-  ?>
-
-
-    <script src="JS/main.js"></script>
+            echo "<div class='scroll-horizontal'>";
+            for ($i = 1; $i <= 100; $i++) {
+                echo "
+                <div class='contenedor-izquierda'>
+                    <h2 class='Titulo'>Acetamimaifriend {$i}</h2>
+                     <div class='contenedor-abajo'>
+                        <img src='img/medicinas.png' alt='medicina' class='imagen-medicamentos'>
+                        <div class='texto-derecha'>
+                            <p class='titulo-nombre'>Nombre</p>
+                            <p class='info-nombre'>Acteaminofen</p>
+                            <p class='titulo-cantidad'>Cantidad</p>
+                            <p class='info-cantidad'>160mg/5ml-Jarabe</p>
+                            <p class='titulo-laboratorio'>Laboratorio</p>
+                            <p class='info-laboratorio'>MK</p>
+                            <p class='titulo-precio'>Precio</p>
+                            <p class='info-precio'>7000 COP</p>
+                        </div>
+                     </div>      
+                </div>
+                ";
+            }
+            echo "</div>";
+        ?>
+    <script src="../JS/main.js"></script>
+    <script src="../JS/Pagina_principal.js"></script>
 </body>
 </html>

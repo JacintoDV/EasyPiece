@@ -32,7 +32,9 @@ if (!isset($_SESSION['usuario'])) {
 
             <div class="items-derecha">
                 <img src="img/Buscar.png" alt="Buscar" class="header-buscar">
-                <img src="img/Notificaciones.png" alt="Notificaciones" class="header-notificaciones">
+                <a href="Pagina_principal.php">
+                    <img src="img/Notificaciones.png" alt="Notificaciones" class="header-notificaciones">
+                </a>
                 <img src="img/CarroCompras.png" alt="Carrito" class="header-carrito">
                 <img src="img/IconoContactanos.png" alt="Icono" class="header-contactanos">
             </div>    
@@ -58,6 +60,7 @@ if (!isset($_SESSION['usuario'])) {
     echo '</div>';
     ?>
 
-    <script src="JS/main.js"></script>
+    <script src="../JS/main.js"></script>
+    <script src="../JS/notificaciones.js"></script>
 </body>
 </html>
