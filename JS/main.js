@@ -10,8 +10,14 @@ document.addEventListener("DOMContentLoaded", () => {
     if (input && imgCorreo && imgInfo) {
         input.addEventListener("input", () => {
             const valor = input.value.trim().toLowerCase();
+            
+            if (valor === "") {
+            // Campo vacío → no mostrar errores
+            imgCorreo.style.display = "none";
+            imgInfo.style.display = "none";
+            input.classList.remove("input-error");}
 
-            if (valor.endsWith("@gmail.com") || valor.endsWith("@hotmail.com")) {
+            else if (valor.endsWith("@gmail.com") || valor.endsWith("@hotmail.com")) {
                 imgCorreo.style.display = "none";
                 imgInfo.style.display = "none";
                 input.classList.remove("input-error");
@@ -60,8 +66,35 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-  
-    
+    validarCampoSoloLetras("nombre", "img-nombres", "img-invalido-nombres");
+    validarCampoSoloLetras("apellidos", "img-apellidos", "img-invalido-apellidos");
+
+    function validarCampoSoloNumeros(idInput, idImgError, idImgInvalido) {
+        const campo = document.getElementById(idInput);
+        const imgError = document.getElementById(idImgError);
+        const imgInvalido = document.getElementById(idImgInvalido);
+
+        if (campo && imgError && imgInvalido) {
+            campo.addEventListener("input", () => {
+                const valor = campo.value.trim();
+                const soloNumeros = /^[0-9]*$/;
+
+                if (valor && !soloNumeros.test(valor)) {
+                    imgError.style.display = "block";
+                    imgInvalido.style.display = "block";
+                    campo.classList.add("input-error");
+                } else {
+                    imgError.style.display = "none";
+                    imgInvalido.style.display = "none";
+                    campo.classList.remove("input-error");
+                }
+            });
+        }
+    }
+
+    validarCampoSoloNumeros("id", "img-id", "img-invalido-id");
+    validarCampoSoloNumeros("telefono", "img-telefono", "img-invalido-telefono");
+
     notificaciones.forEach(notif => {
         notif.addEventListener("click", () => {
             const titulo = notif.querySelector(".titulo-notificacion").innerText;

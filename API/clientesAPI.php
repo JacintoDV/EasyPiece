@@ -4,28 +4,56 @@ $conn = new mysqli("localhost", "root", "#J4c1nt0", "EasyPiece");
 
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'GET':
-        if (isset($_GET['correo'])) {
-            // Buscar si el correo existe
-            $correo = $_GET['correo'];
+        if (isset($_GET['correo']) && !isset($_GET['contrasena'])) {
+        
+        // 👉 SOLO VERIFICAR CORREO
+        $correo = $_GET['correo'];
 
-            $stmt = $conn->prepare("SELECT 1 FROM clientes WHERE correo = ? LIMIT 1");
-            $stmt->bind_param("s", $correo);
-            $stmt->execute();
-            $result = $stmt->get_result();
+        $stmt = $conn->prepare("SELECT 1 FROM clientes WHERE correo = ? LIMIT 1");
+        $stmt->bind_param("s", $correo);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-            echo json_encode($result->num_rows > 0);
-        } else {
-            // Devolver todos los clientes
-            $result = $conn->query("SELECT * FROM clientes");
-            $data = [];
+        echo json_encode(["existe" => ($result->num_rows > 0)]);
+    
+    } elseif (isset($_GET['correo']) && isset($_GET['contrasena'])) {
+        
+        // 👉 CORREO + CONTRASEÑA → VALIDAR LOGIN
+        $correo = $_GET['correo'];
+        $contrasena = $_GET['contrasena'];
 
-            while ($row = $result->fetch_assoc()) {
-                $data[] = $row;
-            }
+        $stmt = $conn->prepare("SELECT contrasena FROM clientes WHERE correo = ? LIMIT 1");
+        $stmt->bind_param("s", $correo);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-            echo json_encode($data);
+        if ($result->num_rows === 0) {
+            echo json_encode(["correcto" => false]); // correo no existe
+            exit;
         }
-        break;
+
+        $row = $result->fetch_assoc();
+        $passwordDB = $row["contrasena"];
+
+        // 👉 SI TUS CONTRASEÑAS NO ESTÁN ENCRIPTADAS:
+        if ($contrasena === $passwordDB) {
+            echo json_encode(["correcto" => true]);
+        } else {
+            echo json_encode(["correcto" => false]);
+        }
+
+    } else {
+        // 👉 SIN PARÁMETROS → devolver todos los clientes
+        $result = $conn->query("SELECT * FROM clientes");
+        $data = [];
+
+        while ($row = $result->fetch_assoc()) {
+            $data[] = $row;
+        }
+
+        echo json_encode($data);
+    }
+    break;
 
     default:
         echo json_encode(["error" => "Método no permitido"]);

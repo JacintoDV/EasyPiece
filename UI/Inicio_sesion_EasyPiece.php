@@ -42,7 +42,7 @@
 
         <p class="iniciar-sesion">Iniciar sesion</p>
 
-        <form id="formLogin" class="formulariouno" action="login.php" method="POST">
+        <form id="formLogin" class="formulariouno">
             <div style="position: relative;">
                 <label for="usuario">Usuario</label>
                 <div class=" input-icono-uno">
@@ -56,7 +56,7 @@
             <label for="contraseña">Contraseña</label>
             <input type="password" id="contraseña" name="contrasena" placeholder="Escribe tu contraseña" required>
 
-            <button type="submit" class="boton-enviar">Enviar</button>
+            <button type="button" class="boton-enviar" onclick="iniciarSesion()">Enviar</button>
 
         </form>
         <p class="olvidaste-contraseña">¿Olvidaste tu contraseña?</p>
@@ -68,7 +68,8 @@
     <footer>
     </footer>
 
-    <script src="../JS/main.js" defer></script> 
+    <script src="../JS/main.js" defer></script>
+    <script src="../JS/iniciar_sesion.js" defer></script>  
 
 </body>
 </html>

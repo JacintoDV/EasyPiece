@@ -1,53 +1,6 @@
 // ¿Ejecuta cuando carga la página
 document.addEventListener("DOMContentLoaded", () => {
 
-    // Validar campos solo letras
-
-    function validarCampoSoloLetras(idInput, idImgError, idImgInvalido) {
-        const campo = document.getElementById(idInput);
-        const imgError = document.getElementById(idImgError);
-        const imgInvalido = document.getElementById(idImgInvalido);
-
-        if (!campo) return;
-
-        campo.addEventListener("input", () => {
-            const soloLetras = /^[a-zA-Z\s]*$/;  // Solo letras + espacios
-            const valor = campo.value.trim();
-            const invalido = valor && !soloLetras.test(valor);
-
-            // Muestra u oculta imágenes
-            imgError.style.display = invalido ? "block" : "none";
-            imgInvalido.style.display = invalido ? "block" : "none";
-
-            campo.classList.toggle("input-error", invalido);
-        });
-    }
-
-    validarCampoSoloLetras("nombres", "img-nombres", "img-invalido-nombres");
-    validarCampoSoloLetras("apellidos", "img-apellidos", "img-invalido-apellidos");
-
-
-
-    // Validar solo números en ID
-    
-    const inputID = document.getElementById("id");
-    const imgID = document.getElementById("img-id");
-    const imgInvalidoID = document.getElementById("img-invalido-id");
-
-    if (inputID) {
-        inputID.addEventListener("input", () => {
-            const soloNumeros = /^[0-9]+$/;
-            const valor = inputID.value.trim();
-            const invalido = valor && !soloNumeros.test(valor);
-
-            imgID.style.display = invalido ? "block" : "none";
-            imgInvalidoID.style.display = invalido ? "block" : "none";
-
-            inputID.classList.toggle("input-error", invalido);
-        });
-    }
-
-
     //Flatpickr Fecha
     if (typeof flatpickr !== "undefined") {
         flatpickr("#fecha", {
