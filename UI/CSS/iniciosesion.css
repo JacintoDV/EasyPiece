@@ -1,0 +1,159 @@
+.bienvenida {
+    width: 80%;  /* Ancho del texto */
+    margin: 20px auto;  /* Centrarlo en la pantalla */
+    padding: 20px;
+    text-align: center;  /* Centrar el texto */
+    font-size: 18px;
+    color: black;  /* Color oscuro para mejor lectura */
+}
+.crear-usuario{
+    display: inline; /* Hace que el texto se mantenga en la misma línea */
+    font-size: 18px;
+    color: #00e8ff;
+    text-decoration: underline;
+    margin-left: 5px; /* Agrega un pequeño espacio entre los textos */
+}
+
+.botones-contenedor {
+    display: flex;
+    justify-content: center; /* Centra los botones horizontalmente */
+    align-items: center; /* Alinea los botones verticalmente */
+    gap: 15px; /* Espacio entre los botones */
+    margin-top: 20px; /* Espacio superior */
+    margin-bottom: 20px;
+}
+
+.botones i {
+    margin-right: 8px; /* Agrega espacio entre el icono y el texto */
+}
+
+.botones {
+    font-family: 'Chau Philomene One', sans-serif;
+    width: 150px; /* Ancho fijo */
+    height: 50px; /* Alto fijo */
+    padding: 10px;
+    font-size: 16px;
+    text-align: center;
+    background-color: transparent; /* Sin color de fondo */
+    color: black; /* Color del texto */
+    border: 2px solid black; /* Borde azul */
+    border-radius: 5px;
+    cursor: pointer;
+}
+/* Estilo para el botón */
+.boton-enviar{
+    font-family: 'Chau Philomene One', sans-serif;
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #00e8ff;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.boton-debajo {
+    display: block;
+    margin: 0 auto; /* Centra horizontalmente */
+}
+
+/* Efecto al pasar el mouse */
+.botones:hover {
+    background-color: #a9aaab; /* Azul al pasar el mouse */
+    color: black; 
+}
+
+.linea {
+    width: 40%; /* Define el ancho */
+    height: 3px; /* Grosor de la línea */
+    background-color: #42ff00; /* Color de la línea */
+    margin: 20px auto; /* Centra la línea */
+    border-radius: 2px; /* Bordes redondeados */
+}
+
+.iniciar-sesion {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    color:rgb(0, 0, 0);
+    margin-bottom: 0px;
+}
+
+.formulariouno {
+    display: flex;
+    flex-direction: column; /* Asegura que los elementos estén en columna */
+    width: 300px; /* Ancho del formulario */
+    margin: 0px auto; /* Centra el formulario horizontalmente */
+    padding: 10px 20px 20px 20px;
+    border: 2px solid white; 
+    border-radius: 10px; 
+    background-color: white; 
+}
+
+
+button:hover {
+    background-color: #42ff00; /* Cambio de color al pasar el mouse */
+}
+.olvidaste-contraseña{
+    text-align: center;
+    font-size: 18px;
+    color:#00e8ff;
+    margin-bottom: 0px;
+    text-decoration: underline;
+}
+
+.decoracion img {
+    position: absolute;
+    width: 35vw;  /* Usa un porcentaje del ancho de la ventana */
+    max-width: 1000px;  /* Tamaño máximo */
+    height: auto;  /* Mantiene la proporción */
+    opacity: 0.8;  /* Opcional, si quieres que se vea más suave */
+}
+
+/* Esquina inferior izquierda */
+.esquina-inferior-izquierda {
+    left: 0;
+    bottom: 0;
+}
+
+/* Esquina inferior derecha (volteada) */
+.esquina-inferior-derecha {
+    right: 0;
+    bottom: 0;
+    transform: scaleX(-1);  /* Voltea horizontalmente */
+}
+
+#usuario {
+    padding: 10px 35px 10px 10px; /* espacio a la derecha para la imagen */
+    font-size: 18px;
+    line-height: 20px;
+    box-sizing: border-box;
+    position: relative;
+  }
+  
+  .input-icono-uno{
+    position: relative;
+  }
+
+  #img-correo {
+  position: absolute;
+  top: 55%;
+  right: 10px;
+  transform: translateY(-50%);
+  height: 16px;
+  width: 16px;
+  pointer-events: none;
+  display: none; /* Aparece cuando sea necesario */
+  }
+
+  #img-invalido {
+  position: absolute;
+  top: 50%;
+  right: -115px;
+  transform: translateY(-50%);
+  height: 100px;
+  width: 150px;
+  pointer-events: none;
+  display: none; /* Aparece cuando sea necesario */
+  }

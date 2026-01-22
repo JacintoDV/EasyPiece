@@ -6,7 +6,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
     case 'GET':
         if (isset($_GET['correo']) && !isset($_GET['contrasena'])) {
         
-        // 👉 SOLO VERIFICAR CORREO
+        // SOLO VERIFICAR CORREO
         $correo = $_GET['correo'];
 
         $stmt = $conn->prepare("SELECT 1 FROM clientes WHERE correo = ? LIMIT 1");
@@ -55,31 +55,61 @@ switch ($_SERVER['REQUEST_METHOD']) {
     }
     break;
 
-    default:
-        echo json_encode(["error" => "Método no permitido"]);
-        break;
-
     case 'POST':
         $input = json_decode(file_get_contents("php://input"), true);
-        $contrasena = $input['contrasena'];
-        $codigo = $input['codigo'];
-        $nombre = $input['nombre'];
-        $correo = $input['correo'];
-        $dir = $input['direccion'] ?? "NULL";
-        $telefono = $input['telefono'];
-        $registro = $input['registro'] ?? "NULL";
-        $fecha_nacimiento = $input['nacimiento'];
-        $conn->query("INSERT INTO clientes (contrasena, codigo, nombre, correo, direccion, telefono, registro, fecha_nacimiento) VALUES ('$contrasena', $codigo, '$nombre', '$correo', " . ($dir === "NULL" ? "NULL" : $dir) . ", $telefono, " . ($registro === "NULL" ? "NULL" : $registro) . ", '$fecha_nacimiento')");
-        echo json_encode(["success" => true, "id" => $conn->insert_id]);
+
+        // 1. Validar que la decodificación fue exitosa
+        if ($input === null) {
+            http_response_code(400); // Bad Request
+            echo json_encode(["success" => false, "error" => "Datos JSON inválidos"]);
+            break;
+        }
+        
+        // 2. Extraer y sanear los datos (mejor usando un operador de fusión null)
+        $contrasena = $input['contrasena'] ?? '';
+        $codigo = $input['codigo'] ?? 0;     // Si es un número, usamos null o 0
+        $nombre = $input['nombre'] ?? '';
+        $correo = $input['correo'] ?? '';
+        $telefono = $input['telefono'] ?? null; // Si es un número, usamos null o 0
+        $fecha_nacimiento = $input['nacimiento'] ?? '';
+
+        // 3. Usar Sentencias Preparadas
+        $sql = "INSERT INTO clientes (contrasena, codigo, nombre, correo, telefono, fecha_nacimiento) 
+                VALUES (?, ?, ?, ?, ?, ?)";
+                
+        // Prepara la sentencia
+        $stmt = $conn->prepare($sql);
+
+        // Enlaza los parámetros (Tipos: s=string, i=integer, d=double, b=blob)
+        // Asumo que codigo y telefono son INT (i) y el resto son STRING (s)
+        $stmt->bind_param("sisiss", 
+            $contrasena, 
+            $codigo, 
+            $nombre, 
+            $correo, 
+            $telefono, 
+            $fecha_nacimiento
+        );
+        
+        // Ejecuta la sentencia
+        if ($stmt->execute()) {
+            echo json_encode(["success" => true, "id" => $stmt->insert_id]);
+        } else {
+            // En caso de fallo de inserción (ej. llave duplicada, tipo incorrecto)
+            http_response_code(500); // Internal Server Error
+            echo json_encode(["success" => false, "error" => $stmt->error]);
+        }
+
+        $stmt->close();
         break;
 
     case 'PUT':
         $input = json_decode(file_get_contents("php://input"), true);
 
-        $codigo = $input['codigo']; 
+        $codigo = (int)$input['codigo']; 
         $nombre = $input['nombre'];
         $correo = $input['correo'];
-        $telefono = $input['telefono'];
+        $telefono = (int)$input['telefono'];
 
         $sql = "UPDATE clientes 
                 SET nombre = '$nombre', correo = '$correo', telefono = $telefono
@@ -105,6 +135,9 @@ switch ($_SERVER['REQUEST_METHOD']) {
         }
         break;
 
+    default:
+        echo json_encode(["error" => "Método no permitido"]);
+        break;
 
 }
 

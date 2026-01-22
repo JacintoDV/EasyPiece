@@ -1,0 +1,167 @@
+/* Reset de márgenes y box-sizing */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Chau Philomene One', sans-serif;
+}
+
+/* === ESTILOS DE LOS HEADERS (GLOBAL) === */
+
+/* Header Box Estándar */
+.header-box {
+    background-color: #42ff00;
+    color: rgb(0, 0, 0);
+    display: flex;  /* Alinear elementos en fila */
+    align-items: center;  /* Centrar verticalmente */
+    padding: 15px 20px;  /* Espaciado interno */
+    width: 100%;  /* Ancho del cuadro */
+    margin: 20px auto;  /* Centrarlo en la pantalla */
+    border-radius: 0px;  /* Bordes redondeados */
+    border: 1px solid black;
+}
+
+/* Header Box Página Principal */
+.header-box-pp {
+    background-color: #42ff00;
+    color: rgb(0, 0, 0);
+    display: flex;
+    align-items: center; 
+    justify-content: space-between;
+    padding: 15px 20px;
+    width: 100%;
+    margin: 20px auto;
+    border-radius: 0px;
+    border: 1px solid black;
+    position: relative; /* Necesario para centrar el h1 con posición absoluta si se necesita */
+}
+
+/* Elementos internos de los Headers */
+.header-logo {
+    width: 50px;  
+    height: auto;  /* Mantiene la proporción */
+}
+
+.header-logo-pp {
+    width: 70px;
+    height: auto;
+}
+
+.title-container {
+    display: flex;
+    align-items: center; /* Alinea título e icono verticalmente */
+    margin-left: auto; /* Empuja este contenedor a la derecha */
+    gap: 10px; /* Espacio entre el título y la nueva imagen */
+}
+
+.header-title {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.header-title-pagina-principal {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.header-icon {
+    width: 30px;  
+    height: auto; 
+}
+
+/* Bloques izquierdo y derecho PP */
+.header-izquierda, .header-derecha{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Iconos PP */
+.header-usuario {
+    width: 40px;
+    height: 40px;
+}
+
+.header-buscar, .header-notificaciones, .header-carrito, .header-contactanos {
+    width: 40px;
+    height: auto;
+}
+
+/* === ELEMENTOS DE FORMULARIO COMUNES === */
+
+label {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 10px;
+    color: black;
+}
+
+input {
+    font-family: 'Chau Philomene One', sans-serif;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 18px;
+    width: 100%; /* Asegura que el campo ocupe todo el ancho disponible */
+    box-sizing: border-box; /* Evita que el padding aumente el tamaño */
+}
+
+#buscador{
+    width: 40%;
+    z-index: 999;
+    visibility: hidden;
+}
+
+.opciones-usuario {
+    /* Posicionamiento */
+    position: fixed;
+    top: 105px;
+    left: 0;           /* Pegado a la izquierda */
+    height: 100%;     /* Ocupa todo el alto de la pantalla */
+    width: 15%;      /* Ancho del menú */
+    z-index: 9999;     /* Asegura que esté por encima de todo */
+    
+    background-color: white;
+    border-right: 3px solid black; /* El borde que pediste */
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 15px;
+    box-shadow: 5px 0px 15px rgba(0,0,0,0.2);
+
+    z-index: -1;      /* Empieza detrás de todo */
+    opacity: 0;       /* Empieza invisible */
+    transition: opacity 0.3s ease;
+}
+
+.opciones-usuario.activo {
+    z-index: 9999;    /* Pasa al frente de todo */
+    opacity: 1;       /* Se hace visible */
+}
+
+.opciones-usuario span{
+    font-size: 24px; 
+}
+
+.opciones-usuario span:hover{
+    background-color: #949596; /* Un color un poco más oscuro */
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#buscar-img:hover, 
+#notificaciones:hover, 
+#carrito:hover, 
+#contactanos:hover, 
+#principal:hover, 
+#usuario:hover {
+    filter: drop-shadow(0px 0px 8px #8c00ff);
+    cursor: pointer;
+}

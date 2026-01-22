@@ -1,0 +1,118 @@
+
+/* segunda pagina*/
+.crear-cuenta{
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    color:rgb(0, 0, 0);
+    margin-bottom: 0px;}
+
+.regresar{
+    text-align: center;
+    font-size: 18px;
+    color:#00e8ff;
+    margin-top: 20px;
+    text-decoration: underline;}
+
+.formulario{
+    width: 60%;
+    margin: 70px auto 0 auto; /* Top: 70px, horizontal: auto, bottom: 0 */;}
+
+.boton-registrarse{
+    font-family: 'Chau Philomene One', sans-serif;
+    padding: 10px;
+    background-color: #00e8ff;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    display: block;
+    margin: 20px auto 0 auto;}
+
+.input-icono{
+    position: relative;}
+
+  #img-nombres, #img-id, #img-apellidos, #img-telefono, #img-correo-uno, #img-contrasena, #img-contrasenados {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  height: 16px;
+  width: 16px;
+  pointer-events: none;
+  display: none; /* Aparece cuando sea necesario */
+  }
+
+
+  #img-invalido-nombres, #img-invalido-id, #img-invalido-apellidos, #img-invalido-telefono, #img-invalido-correo, #img-invalido-contrasena, #img-invalido-contrasenados {
+  position: absolute;
+  top: 40%;
+  right: -115px;
+  transform: translateY(-50%);
+  height: 100px;
+  width: 150px;
+  pointer-events: none;
+  display: none; /* Aparece cuando sea necesario */
+  }
+
+.contenedor-columnas {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.columna {
+  width: 100%;   
+}
+
+/* Cuando la pantalla sea pequeña */
+@media (max-width: 768px) {
+  .contenedor-columnas {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+/* Pantallas grandes → 2 columnas */
+@media (min-width: 1000px) {
+  .columna {
+    width: 49%;
+  }
+}
+
+.divs-paginados {
+  position: relative; 
+}
+
+.divs-paginados input {
+  width: 100%;
+  padding-right: 40px; 
+}
+
+
+.btnVer,
+.btnVerDos {
+  position: absolute;
+  right: 10px;     /*Separación lateral */
+  top: 38px;       /*Ajusta para centrar verticalmente */
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 4px;
+}
+
+/* Evitar fondo en hover */
+.btnVer:hover,
+.btnVerDos:hover {
+  background: none;
+}
+
+/* Evitar resalte al hacer focus */
+.btnVer:focus,
+.btnVerDos:focus {
+  background: none;
+  outline: none;
+}

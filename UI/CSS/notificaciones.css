@@ -1,0 +1,66 @@
+
+/* Notificaciones */
+
+/* === CONTENEDOR PRINCIPAL === */
+.scroll-notificaciones {
+    display: grid;
+    gap: 0; /* sin espacio entre tarjetas */
+    width: 100%;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* === TARJETA BASE === */
+.contenedor-notificaciones {
+    background-color: #ffffff;
+    border: 1px solid transparent;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 15px;
+    cursor: pointer;
+    overflow: visible;
+    transition: max-height 0.3s ease, border 0.3s ease;
+    max-height: none; /* Altura inicial colapsada */
+}
+
+/* === ESTADO COLAPSADO === */
+.contenedor-notificaciones.collapsed .info-notificacion {
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* cantidad de líneas visibles */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+}
+
+/* === ESTADO EXPANDIDO === */
+.contenedor-notificaciones.expanded {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.contenedor-notificaciones.expanded .info-notificacion {
+    display: block; /* mostrar todo el texto */
+    -webkit-line-clamp: unset;
+    overflow: visible;
+    text-overflow: unset;
+}
+
+/* === TEXTOS === */
+.titulo-notificacion {
+    font-size: 25px;
+    color: #000;
+    margin: 0;
+    text-align: left;
+}
+
+.info-notificacion {
+    font-size: 20px;
+    color: #333;
+    margin: 5px 0 0 0;
+    text-align: left;
+    line-height: 1.3;
+}

@@ -1,0 +1,142 @@
+/* Tercera Pagina- Pagina de inicio  */
+
+.header-box-pp {
+    background-color: #42ff00;
+    color: rgb(0, 0, 0);
+    display: flex;
+    align-items: center; 
+    justify-content: space-between;
+    padding: 15px 20px;
+    width: 100%;
+    margin: 20px auto;
+    border-radius: 0px;
+    border: 1px solid black;
+    position: relative; /* Necesario para centrar el h1 con posición absoluta si se necesita */
+}
+
+/* Bloques izquierdo y derecho */
+.header-izquierda, .header-derecha {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Centrado absoluto del h1 */
+.header-title-pagina-principal {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 30px;
+    font-weight: bold;
+}
+
+/* Iconos */
+.header-logo-pp {
+    width: 70px;
+    height: auto;
+}
+.header-usuario {
+    width: 40px;
+    height: 40px;
+}
+.header-buscar, .header-notificaciones, .header-carrito, .header-contactanos {
+    width: 40px;
+    height: auto;
+}
+
+.scroll-horizontal {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+.imagen-medicamentos {
+  width: 40%;
+  height: auto;
+  max-width: 200px;
+  min-width: 100px;
+  display: block;
+  flex-shrink: 0;
+}
+
+.contenedor-izquierda {
+    height: auto; /* Ajusta la altura según prefieras */
+    background-color: #ffffff;
+    border: 2px solid #000000;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.contenedor-abajo {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    gap: 5px;
+    width: 100%;
+
+}
+
+.texto-derecha{
+    flex: 1;
+    width: 60%;
+    min-width: 200px;
+    text-align: right;
+    align-items: flex-end;
+    display: flex;
+    flex-direction: column;
+    word-wrap: break-word;
+}
+
+.titulo-nombre, .titulo-cantidad, .titulo-laboratorio, .titulo-precio{
+    font-size: 25px;
+    color:#000000;
+}
+
+.info-nombre, .info-cantidad, .info-laboratorio, .info-precio{
+    font-size: 20px;
+    color:#414141;
+}
+
+
+@media (max-width: 700px) {
+    .header-title-pagina-principal {
+        position: static; /*deja de ser absoluto */
+        transform: none;
+        width: 100%;
+        text-align: center;
+        font-size: 22px; /* un poco más pequeño para móviles */
+        margin-bottom: 10px;
+    }
+
+    .header-box-pp {
+        display: flex;
+        flex-direction: column; /* pone los elementos en columna */
+        align-items: center;
+    }
+
+    .contenedor-abajo {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .texto-derecha {
+        align-items: center;
+    }
+}
+
+
+

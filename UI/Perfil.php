@@ -1,11 +1,3 @@
-<?php
-/*session_start();
-
-if (!isset($_SESSION['usuario'])) {
-    header("Location: inicio_sesion_EasyPiece.php");
-    exit;
-}*/
-?>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -14,7 +6,7 @@ if (!isset($_SESSION['usuario'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EasyPiece</title>
     <link rel="stylesheet" href="CSS/global.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="CSS/paginaprincipal.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="CSS/perfil.css?v=<?php echo time(); ?>">
 
     <link href="https://fonts.googleapis.com/css2?family=Chau+Philomene+One&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
@@ -30,7 +22,7 @@ if (!isset($_SESSION['usuario'])) {
                 <img src="img/IconoUsuario.png" alt="Usuario" class="header-usuario" id = "usuario">
             </div>
             
-            <h1 class="header-title-pagina-principal">Página Principal</h1>
+            <h1 class="header-title-pagina-principal">Perfil</h1>
             <input type="text" id="buscador" placeholder="Buscar">
 
             <div class="items-derecha">
@@ -42,34 +34,15 @@ if (!isset($_SESSION['usuario'])) {
         </div> 
     </header>
 
-         <?php
-            echo "<div class='scroll-horizontal'>";
-            for ($i = 1; $i <= 100; $i++) {
-                echo "
-                <div class='contenedor-izquierda'>
-                    <h2 class='Titulo'>Acetamimaifriend {$i}</h2>
-                     <div class='contenedor-abajo'>
-                        <img src='img/medicinas.png' alt='medicina' class='imagen-medicamentos'>
-                        <div class='texto-derecha'>
-                            <p class='titulo-nombre'>Nombre</p>
-                            <p class='info-nombre'>Acteaminofen</p>
-                            <p class='titulo-cantidad'>Cantidad</p>
-                            <p class='info-cantidad'>160mg/5ml-Jarabe</p>
-                            <p class='titulo-laboratorio'>Laboratorio</p>
-                            <p class='info-laboratorio'>MK</p>
-                            <p class='titulo-precio'>Precio</p>
-                            <p class='info-precio'>7000 COP</p>
-                        </div>
-                     </div>      
-                </div>
-                ";
-            }
-            echo "</div>";
-        ?>
-        <div class="opciones-usuario" id = "op-usuario">
-            <span>Informacion Usario</span> 
-            <span>Registro</span>
-        </div>
+    <div class="opciones-usuario-perfil" id = "op-usuario-perfil">
+        <span>Informacion Usario</span> 
+        <span>Registro</span>
+    </div>
+
+    <div class="formulario-perfil" id = "form-perfil">
+        <span>Informacion Usario</span> 
+        <span>Registro</span>
+    </div>
         
     <script src="../JS/main.js"></script>
     <script src="../JS/Pagina_principal.js"></script>

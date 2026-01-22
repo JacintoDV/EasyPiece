@@ -106,9 +106,55 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    
+
 
 });
 
+const imgBuscar = document.getElementById('buscar-img');
+const inputBuscar = document.getElementById('buscador'); 
+let mostrar = false;
 
+if (imgBuscar && inputBuscar) { // Verificamos que AMBOS existan
+    imgBuscar.addEventListener('click', function() {
+    mostrar = !mostrar;
+        if (mostrar===true) {
+            inputBuscar.style.visibility = "visible";
+            inputBuscar.style.zIndex = "999"; 
+        } else {
+            inputBuscar.style.visibility = "hidden";
+        }
+        //console.log("¿Buscador visible?:", mostrar); Sirve para verificar la funcionalidad
+    });
+}
+const imgNotificaciones= document.getElementById('notificaciones');
+const imgCarrito = document.getElementById('carrito');
+const imgContactanos= document.getElementById('contactanos');
+const imgPrincipal = document.getElementById ('principal')
 
-  
+if(imgNotificaciones && imgCarrito && imgContactanos && imgPrincipal){
+    imgNotificaciones.addEventListener('click', function(){
+        window.location.href = "Notificaciones.php";
+    })
+
+    imgCarrito.addEventListener('click', function(){
+        window.location.href ="Carro_compras.php";
+    })
+
+    imgContactanos.addEventListener('click', function(){
+        alert("Este falta");
+    })
+
+    imgPrincipal.addEventListener ('click', function (){
+        window.location.href = "Pagina_principal.php";
+    })
+}
+
+const usuario = document.getElementById('usuario');
+const info = document.querySelector('.opciones-usuario');
+
+if (usuario && info) {
+    usuario.addEventListener('click', function() {
+        info.classList.toggle('activo');
+    });
+}

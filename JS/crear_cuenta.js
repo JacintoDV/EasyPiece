@@ -1,20 +1,19 @@
 // ¿Ejecuta cuando carga la página
 document.addEventListener("DOMContentLoaded", () => {
 
-    //Flatpickr Fecha
-    if (typeof flatpickr !== "undefined") {
-        flatpickr("#fecha", {
-            dateFormat: "Y-m-d",   // Compatible MySQL
-            allowInput: true,
-            locale: {
-                firstDayOfWeek: 1
-            }
-        });
-    }
-
     const pass1 = document.getElementById("contrasena");
     const pass2 = document.getElementById("contrasenados");
     const msg = document.getElementById("msg");
+
+
+    flatpickr("#fecha", {
+        dateFormat: "Y-m-d",   // Compatible con MySQL
+        allowInput: true,
+        locale: {
+            firstDayOfWeek: 1
+        }
+    });
+
 
     // función para validar
     function compararInputs() {
@@ -71,6 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         try {
+
             const response = await fetch(`../API/clientesAPI.php?correo=${encodeURIComponent(correo)}`);
             const data = await response.json();
 
@@ -95,16 +95,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 const nombre = document.getElementById("nombre").value.trim();
                 const apellido = document.getElementById("apellidos").value.trim();
                 const nombreCompleto = `${nombre} ${apellido}`;
-
+    
                 // Datos a enviar como JSON
                 const datos = {
                     contrasena: document.getElementById("contrasena").value.trim(),
                     codigo: document.getElementById("id").value.trim(),
                     nombre: nombreCompleto,
                     correo: correo,
-                    direccion: null,
                     telefono: document.getElementById("telefono").value.trim(),
-                    registro: null,
                     nacimiento: document.getElementById("fecha").value.trim()
                 };
 
@@ -129,9 +127,5 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error("Error:", error);
         }
     };
-
-
-
-
 
 });
