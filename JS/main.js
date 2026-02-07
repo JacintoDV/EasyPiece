@@ -157,4 +157,29 @@ if (usuario && info) {
     usuario.addEventListener('click', function() {
         info.classList.toggle('activo');
     });
+} 
+
+const registroUno = document.getElementById('info-usuario-span')
+const registroDos = document.getElementById('info-registro-span')
+
+if (registroDos && registroUno){
+    registroUno.addEventListener ('click', function(){
+        window.location.href = "Perfil.php";
+    })
+}
+const btnCerrar = document.getElementById('btn-cerrar-sesion');
+
+if (btnCerrar) {
+    btnCerrar.addEventListener('click', function() {
+        // 1. Agregamos un estado falso al historial para "bloquearlo"
+        window.history.pushState(null, null, window.location.href);
+        
+        // 2. Escuchamos si el usuario intenta dar atrás justo en el cierre
+        window.onpopstate = function () {
+            window.history.go(1);
+        };
+
+        // 3. Reemplazamos la ubicación (esto elimina la página actual del historial)
+        window.location.replace('Inicio_sesion_EasyPiece.php'); 
+    });
 }

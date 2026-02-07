@@ -62,8 +62,9 @@ if (!isset($_SESSION['usuario'])) {
     ?>
 
     <div class="opciones-usuario" id = "op-usuario">
-            <span>Informacion Usario</span> 
-            <span>Registro</span>
+            <span id= "info-usuario-span">Informacion Usario</span> 
+            <span id= "info-registro-span">Registro</span>
+            <button id="btn-cerrar-sesion">Cerrar Sesion</button>
     </div>
 
     <script src="../JS/main.js"></script>

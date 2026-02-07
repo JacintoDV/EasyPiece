@@ -1,8 +1,5 @@
 // ¿Ejecuta cuando carga la página
 document.addEventListener("DOMContentLoaded", () => {
-
-    const pass1 = document.getElementById("contrasena");
-    const pass2 = document.getElementById("contrasenados");
     const msg = document.getElementById("msg");
 
 
@@ -13,31 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
             firstDayOfWeek: 1
         }
     });
-
-
-    // función para validar
-    function compararInputs() {
-        const v1 = pass1.value.trim();
-        const v2 = pass2.value.trim();
-
-        // Si están vacías
-        if (v1 === "" || v2 === "") {
-            msg.textContent = "Complete ambas contraseñas";
-            msg.style.color = "red";
-            return false;
-        }
-
-        // No coinciden
-        if (v1 !== v2) {
-            msg.textContent = "Las contraseñas no coinciden";
-            msg.style.color = "red";
-            return false;
-        }
-
-        // Si coinciden
-        msg.textContent = "";
-        return true;
-    }
 
 
     function togglePassword(inputId, btnId) {
@@ -56,76 +28,108 @@ document.addEventListener("DOMContentLoaded", () => {
     togglePassword("contrasena", "mostrarPW");
     togglePassword("contrasenados", "mostrarPWdos");
 
-    //Definición global para que sea visible desde el HTML
-    window.verificarCorreo = async function () {
-        const correo = document.getElementById("correo").value.trim();
-
-        if (!correo) {
-            alert("Por favor ingrese un correo");
-            return;
-        }
-
-        if (!compararInputs()) {
-        return; //DETIENE TODO
-        }
-
-        try {
-
-            const response = await fetch(`../API/clientesAPI.php?correo=${encodeURIComponent(correo)}`);
-            const data = await response.json();
-
-            // Detectar si existe (cubre todos los formatos posibles)
-            const existe = (
-                data === true ||
-                data === "true" ||
-                data === 1 ||
-                (data.existe !== undefined && (data.existe === true || data.existe === "true" || data.existe === 1))
-            );
-
-            // Si existe, no dejar continuar
-            if (existe) {
-                alert("El correo ya está registrado");
-                return;
-            }
-
-            // Si NO existe
-            if (compararInputs() === true) {
-
-                // Unir nombre + apellido
-                const nombre = document.getElementById("nombre").value.trim();
-                const apellido = document.getElementById("apellidos").value.trim();
-                const nombreCompleto = `${nombre} ${apellido}`;
-    
-                // Datos a enviar como JSON
-                const datos = {
-                    contrasena: document.getElementById("contrasena").value.trim(),
-                    codigo: document.getElementById("id").value.trim(),
-                    nombre: nombreCompleto,
-                    correo: correo,
-                    telefono: document.getElementById("telefono").value.trim(),
-                    nacimiento: document.getElementById("fecha").value.trim()
-                };
-
-                // Insertar en la API
-                const responseInsert = await fetch("../API/clientesAPI.php", {
-                    method: "POST",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify(datos)
-                });
-
-                const resultado = await responseInsert.json();
-
-                if (resultado.success) {
-                    alert("Usuario registrado correctamente");
-                } else {
-                    alert("Error al registrar el usuario");
-                }
-            }
-
-        } catch (error) {
-            alert("Error de conexión con el servidor");
-            console.error("Error:", error);
-        }
+    function obtenerDatos() {
+    return {
+        nombres: document.getElementById('nombre').value,
+        apellidos: document.getElementById('apellidos').value,
+        correo: document.getElementById('correo').value,
+        id: document.getElementById('id').value,
+        telefono: document.getElementById('telefono').value, 
+        contrasena: document.getElementById('contrasena').value,
+        contrasenados: document.getElementById('contrasenados').value,
+        fecha: document.getElementById('fecha').value
     };
+}
+
+
+function validarEspacioBlancos() {
+    const d = obtenerDatos();
+    // Verificamos si alguno está vacío
+    if (d.nombres.trim() === "" || d.apellidos.trim() === "" || d.correo.trim() === "" || 
+        d.id.trim() === "" || d.telefono.trim() === "" || d.fecha.trim() === "" || 
+        d.contrasena.trim() === "" || d.contrasenados.trim() === "") {
+        
+        alert("Por favor, complete todos los campos");
+        return false;
+    }
+    return true;
+}
+
+
+function compararInputs() {
+    const v1 = document.getElementById('contrasena').value.trim();
+    const v2 = document.getElementById('contrasenados').value.trim();
+
+    if (v1 === "" || v2 === "") {
+        msg.textContent = "Complete ambas contraseñas";
+        msg.style.color = "red";
+        return false;
+    }
+    if (v1 !== v2) {
+        msg.textContent = "Las contraseñas no coinciden";
+        msg.style.color = "red";
+        return false;
+    }
+    msg.textContent = ""; // Limpiamos mensaje si todo está bien
+    return true;
+}
+
+
+function validarFormatoCorreo(correo) {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!regex.test(correo)) {
+        alert("El formato del correo es inválido");
+        return false;
+    }
+    return true;
+}
+async function enviarDatosAlServidor(datos) {
+    try {
+        const response = await fetch('/EasyPiece_Nuevo/services/enviarDatosUsers.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(datos)
+        });
+
+        const resultado = await response.json();
+        
+        if (resultado.success) {
+            alert("¡Registro exitoso!");
+            // Aquí puedes limpiar el formulario o redirigir
+        } else {
+            alert("Error: " + resultado.error);
+        }
+    } catch (error) {
+        console.error("Error crítico:", error);
+    }
+}
+
+const boton = document.getElementById('btnRegistrar');
+
+boton.addEventListener('click', async () => {
+    if (validarEspacioBlancos()) {
+        if (compararInputs()) {
+            const datos = obtenerDatos();
+            if (validarFormatoCorreo(datos.correo)) {
+                boton.disabled = true;
+                boton.textContent = "Registrando...";
+
+                // Llamamos a la función que definimos antes
+                await enviarDatosAlServidor(datos);
+
+                // Reabilitamos el botón después de terminar
+                boton.disabled = false;
+                boton.textContent = "Registrar Cliente";
+                
+            }
+        }
+    }
+});
+
+    
+
+    
+
 
 });
+

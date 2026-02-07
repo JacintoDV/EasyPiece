@@ -35,16 +35,56 @@
     </header>
 
     <div class="opciones-usuario-perfil" id = "op-usuario-perfil">
-        <span>Informacion Usario</span> 
-        <span>Registro</span>
+        <span id = "info-usuario-clic">Informacion de Usuario</span> 
+        <span id="registro-perfil">Registro</span>
+        <button id="btn-cerrar-sesion">Cerrar Sesion</button>
     </div>
 
-    <div class="formulario-perfil" id = "form-perfil">
-        <span>Informacion Usario</span> 
-        <span>Registro</span>
+    <div class="contenedor-informacion" id="cont-info">
+        <div class="contenedor-izquierda">
+            <label for="nombre">Nombre</label>
+            <span>Nombre</span>
+            <label for="apellido">Apellido</label>
+            <span>Apellido</span>
+            <label for="telefono">Telefono</label>
+            <span id="editable-telefono">Telefono</span>
+            <label for="correo">Correo</label>
+            <span id="editable-correo">Correo</span>
+        </div>
+
+        <div class="contenedor-derecha">
+            <label for="direccion">Direccion</label>
+            <span id="editable-direccion">Direccion</span>
+            <label for="codigo">Codigo Usuario</label>
+            <span>Codigo Usuario</span>
+            <label for="fecha">Fecha Nacimiento</label>
+            <span>Fecha Nacimiento</span>
+            <label for="tarjeta">Tarjeta Asociada</label>
+            <span id="editable-trajeta">Tarjeta Asociada</span>
+        </div>
+        <button>Editar</button>
+
     </div>
+    <?php
+    echo '<div class="scroll-registro" id="lista-registro">';
+    for ($i = 1; $i <= 100; $i++) {
+        echo '
+        <div class="contenedor-registro collapsed" >
+            <h2 class="titulo-registro">Compra No# ' . $i . '</h2>
+            <p class="info-registro">
+                Esta es la información número ' . $i . '. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            </p>
+        </div>';
+    }
+    echo '</div>';
+    ?>
         
     <script src="../JS/main.js"></script>
-    <script src="../JS/Pagina_principal.js"></script>
+    <script src="../JS/perfil.js"></script>
 </body>
 </html>

@@ -103,7 +103,7 @@
       
         </div>
       
-        <button type="button" class="boton-registrarse" onclick="verificarCorreo()">Registrarse</button>
+        <button type="button" class="boton-registrarse" id="btnRegistrar" >Registrarse</button>
     </form>
     
     <p class="regresar">Iniciar sesion</p>
