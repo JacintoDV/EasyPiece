@@ -19,30 +19,32 @@ $metodo = $_SERVER['REQUEST_METHOD'];
 switch ($metodo) {
     case 'GET':
         if (isset($_GET['correo'])) {
-            // 1. Obtener el correo de la URL
             $correoProporcionado = $_GET['correo'];
             
-            // 2. Consultar la base de datos
-            $stmt = $conn->prepare("SELECT * FROM clientes WHERE correo = ?");
+            // Agregamos 'nombre' y 'contrasena' a la consulta
+            $stmt = $conn->prepare("SELECT codigo, nombre, contrasena FROM clientes WHERE correo = ?");
             $stmt->bind_param("s", $correoProporcionado);
             $stmt->execute();
             $resultado = $stmt->get_result();
-            $datosBD = $resultado->fetch_assoc();
 
-            if ($datosBD) {
+            if ($resultado->num_rows > 0) {
+                // Obtenemos los datos para enviarlos en el JSON
+                $usuario = $resultado->fetch_assoc();
 
-                $objCliente = new Cliente($datosBD);
-                if ($objCliente->verificarCorreoCoincide($correoProporcionado)) {
-                    echo json_encode([
-                        "existe" => true,
-                        "datos" => $datosBD,
-                        "mensaje" => "Coincidencia confirmada por la Clase Cliente"
-                    ]);
-                }
+                echo json_encode([
+                    "existe" => true,
+                    "mensaje" => "El correo ya está registrado",
+                    "datos" => $usuario // Esto es lo que el Service leerá para el login
+                ]);
             } else {
-                echo json_encode(["existe" => false, "mensaje" => "Correo no encontrado"]);
+                echo json_encode([
+                    "existe" => false, 
+                    "mensaje" => "Correo disponible"
+                ]);
             }
+            exit; 
         } else {
+            // Listar todos (sigue funcionando igual)
             $res = $conn->query("SELECT * FROM clientes");
             echo json_encode($res->fetch_all(MYSQLI_ASSOC));
         }
@@ -52,14 +54,16 @@ switch ($metodo) {
     case 'POST':
         $data = json_decode(file_get_contents("php://input"), true);
         
-        // Encriptamos la contraseña antes de guardar
-        $passHash = password_hash($data['contrasena'], PASSWORD_DEFAULT);
+        // YA NO USAMOS password_hash aquí, porque la Clase Cliente ya lo hizo.
+        // Solo tomamos el hash que viene en el JSON.
+        $passHash = $data['contrasena']; 
 
         $sql = "INSERT INTO clientes (contrasena, codigo, nombre, correo, direccion, telefono, registro, fecha_nacimiento) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         
         $stmt = $conn->prepare($sql);
-        // tipos: s=string, i=int. Según tu tabla: s, i, s, s, i, i, i, s
+        
+        // Se mantiene igual, pero ahora $passHash es el hash real ($2y$10...)
         $stmt->bind_param("sisssiis", 
             $passHash, 
             $data['codigo'], 

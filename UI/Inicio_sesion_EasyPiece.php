@@ -56,9 +56,9 @@
             </div>
 
             <label for="contraseña">Contraseña</label>
-            <input type="password" id="contraseña" name="contrasena" placeholder="Escribe tu contraseña" required>
+            <input type="password" id="contrasena" name="contrasena" placeholder="Escribe tu contraseña" required>
 
-            <button type="button" class="boton-enviar" onclick="iniciarSesion()">Enviar</button>
+            <button type="button" class="boton-enviar" id="btnEnviar">Enviar</button>
 
         </form>
         <p class="olvidaste-contraseña">¿Olvidaste tu contraseña?</p>

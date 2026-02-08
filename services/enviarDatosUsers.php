@@ -16,8 +16,11 @@ if ($data) {
         "codigo"     => $data['id'] 
     ]);
 
-    if (!$cliente->verificarCorreoCoincide($data['correo'])) {
-        echo json_encode(["success" => false, "error" => "El correo no coincide con el formato esperado"]);
+    
+    $urlBusqueda = "http://localhost/EasyPiece_Nuevo/API/clientesAPI.php"; 
+
+    if ($cliente->verificarCorreoCoincide($urlBusqueda)) { 
+        echo json_encode(["success" => false, "error" => "El correo ya está registrado en el sistema"]);
         exit;
     }
 

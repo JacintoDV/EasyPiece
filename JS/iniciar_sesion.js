@@ -1,56 +1,62 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
+    const botonEnviar = document.getElementById('btnEnviar');
 
-    // Hacer la función visible en HTML
-    window.iniciarSesion = async function () {
+    if (botonEnviar) {
+        // 1. Recibimos el parámetro 'e' (evento)
+        botonEnviar.addEventListener('click', (e) => {
+            
+            // 2. IMPORTANTE: Evita que la página se recargue y limpie los datos
+            e.preventDefault(); 
 
-        const correo = document.getElementById("usuario").value.trim();
-        const contrasena = document.getElementById("contraseña").value.trim();
+            const inputUsuario = document.getElementById('usuario');
+            const inputContrasena = document.getElementById('contrasena');
 
-        if (!correo || !contrasena) {
-            alert("Por favor complete todos los campos");
-            return;
-        }
-
-        try {
-            // 1️⃣ VERIFICAR SI EL CORREO EXISTE
-            const responseCorreo = await fetch(`../API/clientesAPI.php?correo=${encodeURIComponent(correo)}`);
-            const dataCorreo = await responseCorreo.json();
-
-            const correoExiste =
-                dataCorreo === true ||
-                dataCorreo === "true" ||
-                dataCorreo === 1 ||
-                (dataCorreo.existe !== undefined &&
-                 (dataCorreo.existe === true || dataCorreo.existe === "true" || dataCorreo.existe === 1));
-
-            if (!correoExiste) {
-                alert("El correo no está registrado");
+            if (!inputUsuario || !inputContrasena) {
+                console.error("Error: No se encuentran los inputs con ID 'usuario' o 'contrasena'");
+                alert("Error técnico: IDs de formulario no encontrados");
                 return;
             }
 
-            // 2️⃣ VERIFICAR CONTRASEÑA
-            const responsePass = await fetch(`../API/clientesAPI.php?correo=${encodeURIComponent(correo)}&contrasena=${encodeURIComponent(contrasena)}`);
-            const dataPass = await responsePass.json();
+            const correoLimpio = inputUsuario.value.trim();
+            const passLimpia = inputContrasena.value.trim();
 
-            const passwordCorrecta =
-                dataPass === true ||
-                dataPass === "true" ||
-                dataPass === 1 ||
-                (dataPass.correcto !== undefined &&
-                 (dataPass.correcto === true || dataPass.correcto === "true" || dataPass.correcto === 1));
-
-            if (!passwordCorrecta) {
-                alert("La contraseña no es correcta");
+            if (correoLimpio === "" || passLimpia === "") {
+                alert("Por favor, no dejes campos vacíos");
                 return;
             }
 
-            // 3️⃣ SI TODO ES CORRECTO → REDIRIGIR
-            window.location.href = "../UI/Pagina_principal.php";
+            const payload = {
+                correo: correoLimpio,
+                contrasena: passLimpia
+            };
 
-        } catch (error) {
-            alert("Error de conexión con el servidor");
-            console.error("Error:", error);
-        }
-    };
+            console.log("Enviando datos:", payload); // Para que veas en consola qué sale
 
+            fetch('../Services/validarUser.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            // 3. Mejoramos la captura de errores por si el PHP manda algo que no es JSON
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Error en el servidor: " + response.status);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Respuesta recibida:", data);
+                if (data.success) {
+                    // Si el login es correcto, redirigimos
+                    window.location.href = "Pagina_principal.php";
+                } else {
+                    alert("Error: " + data.error);
+                }
+            })
+            .catch(error => {
+                console.error("Error en la petición:", error);
+                alert("Hubo un fallo en la conexión con el servidor");
+            });
+        });
+    }
 });

@@ -49,12 +49,24 @@ class Cliente {
         return $codigoFinal;
     }
  
-    public function verificarCorreoCoincide($correoAComparar) {
-        // Usamos trim() para evitar errores por espacios en blanco
-        // y strtolower() para que no importe si uno es Mayúscula y otro minúscula
-        return strtolower(trim($this->correo)) === strtolower(trim($correoAComparar));
-    }
+    public function verificarCorreoCoincide($urlApiBusqueda) {
+        $url = $urlApiBusqueda . "?correo=" . urlencode($this->correo);
 
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5); 
+        $result = curl_exec($ch); 
+        if (curl_errno($ch) || $result === false) {
+            curl_close($ch);
+            return false; 
+        }
+        curl_close($ch);
+
+        $data = json_decode($result, true);
+
+        return (isset($data['existe']) && ($data['existe'] === true || $data['existe'] === 1));
+    }
 
 
 
