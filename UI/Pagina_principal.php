@@ -42,30 +42,9 @@ if (!isset($_SESSION['usuario'])) {
         </div> 
     </header>
 
-         <?php
-            echo "<div class='scroll-horizontal'>";
-            for ($i = 1; $i <= 100; $i++) {
-                echo "
-                <div class='contenedor-izquierda'>
-                    <h2 class='Titulo'>Acetamimaifriend {$i}</h2>
-                     <div class='contenedor-abajo'>
-                        <img src='img/medicinas.png' alt='medicina' class='imagen-medicamentos'>
-                        <div class='texto-derecha'>
-                            <p class='titulo-nombre'>Nombre</p>
-                            <p class='info-nombre'>Acteaminofen</p>
-                            <p class='titulo-cantidad'>Cantidad</p>
-                            <p class='info-cantidad'>160mg/5ml-Jarabe</p>
-                            <p class='titulo-laboratorio'>Laboratorio</p>
-                            <p class='info-laboratorio'>MK</p>
-                            <p class='titulo-precio'>Precio</p>
-                            <p class='info-precio'>7000 COP</p>
-                        </div>
-                     </div>      
-                </div>
-                ";
-            }
-            echo "</div>";
-        ?>
+         <div class='scroll-horizontal' id='contenedor-productos'>
+            <p>Cargando productos...</p> 
+        </div>
         <div class="opciones-usuario" id = "op-usuario">
             <span id= "info-usuario-span">Informacion Usario</span> 
             <span id= "info-registro-span">Registro</span>
