@@ -42,24 +42,8 @@ if (!isset($_SESSION['usuario'])) {
         </div> 
     </header>
 
-    <?php
-    echo '<div class="scroll-notificaciones">';
-    for ($i = 1; $i <= 100; $i++) {
-        echo '
-        <div class="contenedor-notificaciones collapsed" >
-            <h2 class="titulo-notificacion">Notificación ' . $i . '</h2>
-            <p class="info-notificacion">
-                Esta es la información número ' . $i . '. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            </p>
-        </div>';
-    }
-    echo '</div>';
-    ?>
+    <div class="scroll-notificaciones" id="contenedor-notificaciones">
+        </div>
 
     <div class="opciones-usuario" id = "op-usuario">
             <span id= "info-usuario-span">Informacion Usario</span> 

@@ -1,12 +1,11 @@
 <?php
-/*session_start();
-
-if (!isset($_SESSION['usuario'])) {
-    header("Location: inicio_sesion_EasyPiece.php");
-    exit;
-}*/
+session_start();
+if (!isset($_SESSION['usuario_id'])) {
+    // Si no hay sesión, lo mandamos al login de inmediato
+    header("Location: Inicio_sesion_EasyPiece.php");
+    exit();
+}
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>

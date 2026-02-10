@@ -171,15 +171,21 @@ const btnCerrar = document.getElementById('btn-cerrar-sesion');
 
 if (btnCerrar) {
     btnCerrar.addEventListener('click', function() {
-        // 1. Agregamos un estado falso al historial para "bloquearlo"
-        window.history.pushState(null, null, window.location.href);
-        
-        // 2. Escuchamos si el usuario intenta dar atrás justo en el cierre
-        window.onpopstate = function () {
-            window.history.go(1);
-        };
-
-        // 3. Reemplazamos la ubicación (esto elimina la página actual del historial)
-        window.location.replace('Inicio_sesion_EasyPiece.php'); 
+        // 1. Avisamos al servidor que destruya la sesión
+        fetch('../Services/logout.php')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // 2. Limpiamos el historial para que no puedan volver atrás
+                    window.history.pushState(null, null, window.location.href);
+                    window.onpopstate = function () {
+                        window.history.go(1);
+                    };
+                    
+                    // 3. Redirigimos al Login
+                    window.location.replace('Inicio_sesion_EasyPiece.php'); 
+                }
+            })
+            .catch(error => console.error("Error al cerrar sesión:", error));
     });
 }

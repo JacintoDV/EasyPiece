@@ -37,7 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             })
-            // 3. Mejoramos la captura de errores por si el PHP manda algo que no es JSON
             .then(response => {
                 if (!response.ok) {
                     throw new Error("Error en el servidor: " + response.status);
