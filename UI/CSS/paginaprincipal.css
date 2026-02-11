@@ -111,6 +111,19 @@
     color:#414141;
 }
 
+.contenedor-izquierda.seleccionado {
+    border: 2px solid #2ecc71; /* Un verde farmacia */
+    background-color: #f0fff4;
+    transform: scale(1.02);
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.contenedor-izquierda:hover {
+    cursor: pointer;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+}
+
 
 @media (max-width: 700px) {
     .header-title-pagina-principal {

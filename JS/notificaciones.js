@@ -1,9 +1,9 @@
 document.addEventListener("click", (e) => {
-  const notificacion = e.target.closest(".contenedor-notificaciones");
-  if (!notificacion) return;
+    const notificacion = e.target.closest(".contenedor-notificaciones");
+    if (!notificacion) return;
 
-  notificacion.classList.toggle("expanded");
-  notificacion.classList.toggle("collapsed");
+    notificacion.classList.toggle("expanded");
+    notificacion.classList.toggle("collapsed");
 });
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -38,9 +38,29 @@ document.addEventListener("DOMContentLoaded", () => {
                 scrollNotificaciones.innerHTML = ""; 
 
                 data.datos.forEach(n => {
+                    
+                   
+                    let tituloAmigable = n.tipo; // Valor por defecto
+                    
+                    // Convertimos el tipo técnico a un nombre elegante para el usuario
+                    switch(n.tipo.toLowerCase()) {
+                        case 'success':
+                            tituloAmigable = "Pago Realizado";
+                            break;
+                        case 'info':
+                            tituloAmigable = "Notificación de Sistema";
+                            break;
+                        case 'warning':
+                            tituloAmigable = "Atención Requerida";
+                            break;
+                        case 'error':
+                            tituloAmigable = "Error en Transacción";
+                            break;
+                    }
+
                     const item = `
                         <div class="contenedor-notificaciones collapsed" data-id="${n.id}">
-                            <h2 class="titulo-notificacion">${n.tipo}</h2>
+                            <h2 class="titulo-notificacion">${tituloAmigable}</h2>
                             <p class="info-notificacion">
                                 ${n.mensaje}
                                 <br><br>
@@ -57,18 +77,19 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error("ERROR FATAL en el Fetch:", error);
         });
 
-  document.getElementById("buscador").addEventListener("keyup", (e) => {
-      const texto = e.target.value.toLowerCase();
-      const notificaciones = document.querySelectorAll(".contenedor-notificaciones");
+    // Lógica del buscador
+    document.getElementById("buscador").addEventListener("keyup", (e) => {
+        const texto = e.target.value.toLowerCase();
+        const notificaciones = document.querySelectorAll(".contenedor-notificaciones");
 
-      notificaciones.forEach(notificacion => {
-          const nombreNotificacion = notificacion.querySelector(".titulo-notificacion").textContent.toLowerCase();
-          
-          if (nombreNotificacion.includes(texto)) {
-              notificacion.style.display = "block"; // Se muestra si coincide
-          } else {
-              notificacion.style.display = "none";  // Se oculta si no coincide
-          }
-      });
-  });
+        notificaciones.forEach(notificacion => {
+            const nombreNotificacion = notificacion.querySelector(".titulo-notificacion").textContent.toLowerCase();
+            
+            if (nombreNotificacion.includes(texto)) {
+                notificacion.style.display = "block"; // Se muestra si coincide
+            } else {
+                notificacion.style.display = "none";  // Se oculta si no coincide
+            }
+        });
+    });
 });

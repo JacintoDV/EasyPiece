@@ -1,8 +1,8 @@
 <?php
-require_once '../Clases/Notificacion.php';
+// Usamos require_once para no duplicar la carga de la clase
+require_once __DIR__ . '/../Clases/Notificacion.php';
 
-header('Content-Type: application/json');
-
+// 1. CONEXIÓN A LA BASE DE DATOS
 try {
     $host = "localhost";
     $db_name = "easypiece";
@@ -11,83 +11,85 @@ try {
 
     $conexion = new PDO("mysql:host=$host;dbname=$db_name;charset=utf8", $user, $pass);
     $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
+    // Hacemos que la conexión esté disponible para la clase globalmente
+    $GLOBALS['conexion'] = $conexion;
+
 } catch (PDOException $e) {
-    echo json_encode(["success" => false, "error" => "Error de conexión: " . $e->getMessage()]);
+    // Solo enviamos error JSON si la petición es vía Web
+    if (isset($_SERVER['REQUEST_METHOD'])) {
+        header('Content-Type: application/json');
+        echo json_encode(["success" => false, "error" => "Error de conexion: " . $e->getMessage()]);
+    }
     exit;
 }
 
-// 2. INSTANCIAR LA CLASE (Pasándole la conexión que acabamos de crear)
-$notifControl = new Notificacion($conexion);
+/**
+ * 2. LÓGICA DE CONTROLADOR (SWITCH)
+ * La clave: Solo se ejecuta si el archivo es llamado directamente.
+ * Si es un 'require' desde el Service, este bloque se ignora.
+ */
+$es_llamada_directa = (basename($_SERVER['PHP_SELF']) == 'notificacionesAPI.php');
+$metodo = $_SERVER['REQUEST_METHOD'] ?? null;
 
-$metodo = $_SERVER['REQUEST_METHOD'];
-$json = file_get_contents('php://input');
-$data = json_decode($json, true);
-
-// 3. SWITCH DE VERBOS HTTP
-switch ($metodo) {
+if ($metodo && $es_llamada_directa) {
+    header('Content-Type: application/json');
     
-    case 'GET':
-        $userId = $_GET['usuario_id'] ?? $data['usuario_id'] ?? null;
+    // Instanciamos la clase (ella misma pescará la $conexion global)
+    $notifControl = new Notificacion();
+    
+    $json = file_get_contents('php://input');
+    $data = json_decode($json, true);
 
-        if ($userId) {
-            $res = $notifControl->leerPorUsuario($userId);
-            echo json_encode([
-                "success" => true,
-                "datos" => $res,
-                "contador" => count($res)
-            ]);
-        } else {
-            // Solo mandamos el error 400 si alguien entra DIRECTO al archivo API
-            // Si viene por el Service (vía require de la Clase), se queda callado.
-            if (basename($_SERVER['PHP_SELF']) == 'notificacionesAPI.php') {
-                http_response_code(400);
+    switch ($metodo) {
+        case 'GET':
+            $userId = $_GET['usuario_id'] ?? $data['usuario_id'] ?? null;
+            if ($userId) {
+                $res = $notifControl->leerPorUsuario($userId);
                 echo json_encode([
-                    "success" => false, 
-                    "error" => "No se proporcionó usuario_id"
-                ]);
-            }
-        }
-        break;
-
-        
-
-    case 'POST':
-        $userId  = $data['usuario_id'] ?? null;
-        $mensaje = $data['mensaje'] ?? null;
-        $tipo    = $data['tipo'] ?? 'info';
-
-        if ($userId && $mensaje) {
-            $resultado = $notifControl->crear($userId, $mensaje, $tipo);
-            
-            if ($resultado) {
-                // Obtenemos el ID que la DB generó automáticamente
-                $nuevoId = $conexion->lastInsertId(); 
-                echo json_encode([
-                    "success" => true, 
-                    "mensaje" => "Notificación guardada",
-                    "id_generado" => $nuevoId
+                    "success" => true,
+                    "datos" => $res,
+                    "contador" => count($res)
                 ]);
             } else {
-                echo json_encode(["success" => false, "error" => "No se pudo insertar"]);
+                http_response_code(400);
+                echo json_encode(["success" => false, "error" => "No se proporciono usuario_id"]);
             }
-        } else {
-            echo json_encode(["success" => false, "error" => "Faltan datos (usuario_id o mensaje)"]);
-        }
-        break;
+            break;
 
-    case 'PUT':
-        $notifId = $data['id'] ?? null;
-        if ($notifId) {
-            $resultado = $notifControl->marcarComoLeida($notifId);
-            echo json_encode(["success" => $resultado, "mensaje" => "Leída"]);
-        }
-        break;
+        case 'POST':
+            $userId  = $data['usuario_id'] ?? null;
+            $mensaje = $data['mensaje'] ?? null;
+            $tipo    = $data['tipo'] ?? 'info';
 
-    case 'DELETE':
-        $notifId = $data['id'] ?? null;
-        if ($notifId) {
-            $resultado = $notifControl->borrar($notifId);
-            echo json_encode(["success" => $resultado, "mensaje" => "Eliminada"]);
-        }
-        break;
+            if ($userId && $mensaje) {
+                $resultado = $notifControl->crear($userId, $mensaje, $tipo);
+                echo json_encode([
+                    "success" => $resultado, 
+                    "mensaje" => $resultado ? "Notificacion guardada" : "Error al insertar",
+                    "id_generado" => $conexion->lastInsertId()
+                ]);
+            } else {
+                echo json_encode(["success" => false, "error" => "Faltan datos"]);
+            }
+            break;
+
+        case 'PUT':
+            $notifId = $data['id'] ?? null;
+            if ($notifId) {
+                $resultado = $notifControl->marcarComoLeida($notifId);
+                echo json_encode(["success" => $resultado, "mensaje" => "Estado actualizado"]);
+            }
+            break;
+
+        case 'DELETE':
+            $notifId = $data['id'] ?? null;
+            if ($notifId) {
+                $resultado = $notifControl->borrar($notifId);
+                echo json_encode(["success" => $resultado, "mensaje" => "Eliminada"]);
+            }
+            break;
+    }
+    // Terminamos la ejecución para evitar que ruidos externos ensucien el JSON
+    exit;
 }

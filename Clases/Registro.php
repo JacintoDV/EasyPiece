@@ -1,0 +1,72 @@
+<?php
+class Registro {
+    // Ajusta la URL según tu carpeta local
+    // CAMBIO 1: Usar IP directa para evitar problemas de resolución de nombre
+    private $api_url = "http://127.0.0.1/EasyPiece_Nuevo/API/registroAPI.php";
+
+    public function crear($idCliente, $total, $metodoPago = 'Efectivo', $estado = 'Pendiente', $idFactura = null) {
+        $datos = [
+            "cliente"     => $idCliente,
+            "total"       => $total,
+            "metodo_pago" => $metodoPago,
+            "estado"      => $estado,
+            "factura"     => $idFactura
+        ];
+
+        $ch = curl_init($this->api_url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($datos));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+        
+        // CAMBIO 2: Opciones de estabilidad
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5); // Espera 5 seg para conectar
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);        // 10 seg máximo de ejecución
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+
+        $response = curl_exec($ch);
+        
+        // DEBUG: Si algo falla, esto nos dirá qué fue en el log
+        if ($response === false) {
+            $error = curl_error($ch);
+            curl_close($ch);
+            return ["success" => false, "error" => "Error de cURL: " . $error];
+        }
+
+        curl_close($ch);
+        return json_decode($response, true);
+    }
+
+    public function listar($idCliente = null) {
+        $url = $this->api_url;
+        if ($idCliente) {
+            $url .= "?cliente=" . $idCliente;
+        }
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        curl_close($ch);
+        
+        return json_decode($response, true);
+    }
+
+    /**
+     * Elimina un registro por ID
+     */
+    public function eliminar($id) {
+        $datos = ["id" => $id];
+
+        $ch = curl_init($this->api_url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($datos));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+        
+        $response = curl_exec($ch);
+        curl_close($ch);
+        
+        return json_decode($response, true);
+    }
+}
+?>

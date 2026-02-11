@@ -1,3 +1,4 @@
+/* === ESTRUCTURA PRINCIPAL === */
 .opciones-usuario-perfil {
     position: fixed;
     top: 105px;
@@ -24,6 +25,7 @@
     cursor: pointer;
 }
 
+/* === SECCIÓN INFORMACIÓN === */
 .contenedor-informacion {
     border-right: 3px solid black;
     width: 75%;
@@ -34,29 +36,26 @@
     padding: 20px;
     flex-direction: row;
     justify-content: center;
-    gap: 200px; /* Si esto aprieta mucho los textos, prueba bajarlo a 100px */
+    gap: 200px; 
     align-items: flex-start;
     background-color: white;
     z-index: 0;
-    
 }
 
-/* CAMBIO AQUÍ: Forzamos que ambos contenedores sean matemáticamente iguales */
 .contenedor-izquierda, .contenedor-derecha {
     display: flex;
     flex-direction: column;
     padding-left: 20px;
     padding-top: 10px;
-    flex: 1;           /* Se reparten el espacio 50/50 */
-    max-width: 400px;  /* Evita que se estiren de más */
+    flex: 1;
+    max-width: 400px;
 }
 
-/* CAMBIO AQUÍ: Unificamos line-height y suavizado para eliminar la diferencia visual */
 .contenedor-izquierda span, .contenedor-derecha span {
     color: #a9aaab;
     font-size: 28px !important;
     font-weight: normal !important;
-    line-height: 1.2 !important; /* Altura de línea idéntica */
+    line-height: 1.2 !important;
     -webkit-font-smoothing: antialiased; 
 }
 
@@ -67,12 +66,13 @@
     -webkit-font-smoothing: antialiased;
 }
 
+/* === BOTONES === */
 .opciones-usuario-perfil button {
     font-size: 28px;
     margin-top: auto; 
     margin-bottom: 20px; 
     width: 60%; 
-    font-family: 'Chau Philomene One', sans-serif;       
+    font-family: 'Chau Philomene One', sans-serif;           
     align-self: center;
     background-color: #4200ff;
     height: 70px;
@@ -84,7 +84,7 @@
 .contenedor-informacion button {
     font-size: 28px;
     width: 250px; 
-    font-family: 'Chau Philomene One', sans-serif;       
+    font-family: 'Chau Philomene One', sans-serif;           
     background-color: #4200ff;
     height: 70px;
     position: absolute;
@@ -96,33 +96,7 @@
     cursor: pointer;
 }
 
-.scroll-registro{
-    border-right: 3px solid black;
-    width: 75%;
-    right: 0;
-    position: fixed;
-    top: 105px;
-    height: calc(100% - 105px); 
-    padding: 20px;
-    overflow: scroll;
-    z-index: 0;
-    background-color: white;
-}
-
-.contenedor-informacion.activo {
-    display: flex !important;
-    z-index: 9999 !important;
-}
-.scroll-registro.activo {
-    z-index: 9999 !important;
-}
-
-.scroll-registro.inactivo, 
-.contenedor-informacion.inactivo {
-    display: none !important;
-    z-index: -1 !important;
-}
-
+/* === INPUTS DE EDICIÓN === */
 .contenedor-informacion input {
     font-size: 28px !important;
     color: black;
@@ -134,55 +108,54 @@
     font-family: inherit;
 }
 
-/* === CONTENEDOR PRINCIPAL REGISTRO=== */
+/* === SECCIÓN DE REGISTROS (SCROLL) === */
 .scroll-registro {
-    display: grid;
-    gap: 0; /* sin espacio entre tarjetas */
+    border-right: 3px solid black;
     width: 75%;
-    padding: 0;
+    right: 0;
+    position: fixed;
+    top: 105px;
+    height: calc(100% - 105px); 
+    padding: 20px;
+    overflow-y: auto;
+    z-index: 0;
+    background-color: white;
+    display: none; /* Se activa con .activo */
     box-sizing: border-box;
 }
 
-/* === TARJETA BASE REGISTRO=== */
+/* === ESTADOS DE VISIBILIDAD (PARA JS) === */
+.contenedor-informacion.activo {
+    display: flex !important;
+    z-index: 9999 !important;
+}
+
+.scroll-registro.activo {
+    display: block !important;
+    z-index: 9999 !important;
+}
+
+.scroll-registro.inactivo, 
+.contenedor-informacion.inactivo {
+    display: none !important;
+    z-index: -1 !important;
+}
+
+/* === TARJETAS DE REGISTRO (CAMBIO SOLICITADO) === */
 .contenedor-registro {
-    background-color: #ffffff;
-    border: 1px solid transparent;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
     width: 100%;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
     padding: 15px;
     cursor: pointer;
-    overflow: visible;
-    transition: max-height 0.3s ease, border 0.3s ease;
-    max-height: none; /* Altura inicial colapsada */
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
 }
 
-/* === ESTADO COLAPSADO === */
-.contenedor-registro.collapsed .info-registro {
-    display: -webkit-box;
-    -webkit-line-clamp: 2; /* cantidad de líneas visibles */
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: normal;
-}
-
-/* === ESTADO EXPANDIDO === */
-.contenedor-registro.expanded {
-    border: 1px solid rgba(0, 0, 0, 0.2);
-}
-
-.contenedor-registro.expanded .info-registro {
-    display: block; /* mostrar todo el texto */
-    -webkit-line-clamp: unset;
-    overflow: visible;
-    text-overflow: unset;
-}
-
-/* === TEXTOS === */
 .titulo-registro {
     font-size: 25px;
     color: #000;
@@ -190,12 +163,25 @@
     text-align: left;
 }
 
+/* La información se oculta en estado colapsado */
 .info-registro {
+    display: none; 
     font-size: 20px;
     color: #333;
-    margin: 5px 0 0 0;
+    margin: 10px 0 0 0;
     text-align: left;
     line-height: 1.3;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
 }
 
+/* Estado cuando el JS añade la clase .expanded al hacer clic */
+.contenedor-registro.expanded {
+    background-color: #fff;
+    border: 1px solid #28a745; /* Borde verde al expandir */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
 
+.contenedor-registro.expanded .info-registro {
+    display: block; /* Muestra todo el contenido */
+}

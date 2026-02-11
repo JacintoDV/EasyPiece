@@ -4,12 +4,33 @@ class Notificacion {
     private $tabla = "notificaciones";
 
     public function __construct() {
+        // Traemos el archivo de la API que crea la conexión $conexion
         require_once __DIR__ . '/../API/notificacionesAPI.php';
         
-        // Ahora ya tenemos acceso a $conexion porque la API la creó
+        // Usamos la palabra clave 'global' para acceder a la variable definida en la API
+        global $conexion;
         $this->conexion = $conexion;
     }
 
+    /**
+     * CREATE: Inserta una nueva notificación (usada por el Service de Factura)
+     */
+    public function crear($usuario_id, $mensaje, $tipo = 'info') {
+        $query = "INSERT INTO " . $this->tabla . " (usuario_id, mensaje, tipo, leido, fecha_creacion) 
+                  VALUES (:uid, :msg, :tipo, 0, NOW())";
+        
+        $stmt = $this->conexion->prepare($query);
+        
+        return $stmt->execute([
+            ':uid'   => $usuario_id,
+            ':msg'   => $mensaje,
+            ':tipo'  => $tipo
+        ]);
+    }
+
+    /**
+     * READ: Trae todas las notificaciones de un usuario
+     */
     public function leerPorUsuario($usuario_id) {
         $query = "SELECT * FROM " . $this->tabla . " WHERE usuario_id = :uid ORDER BY fecha_creacion DESC";
         $stmt = $this->conexion->prepare($query);
@@ -18,7 +39,7 @@ class Notificacion {
     }
 
     /**
-     * UPDATE: Cambia el estado de 'leido' de 0 a 1.
+     * UPDATE: Cambia el estado de 'leido' de 0 a 1
      */
     public function marcarComoLeida($id) {
         $query = "UPDATE " . $this->tabla . " SET leido = 1 WHERE id = :id";
@@ -28,7 +49,7 @@ class Notificacion {
     }
 
     /**
-     * DELETE: Elimina físicamente el registro.
+     * DELETE: Elimina físicamente el registro
      */
     public function borrar($id) {
         $query = "DELETE FROM " . $this->tabla . " WHERE id = :id";
@@ -38,7 +59,7 @@ class Notificacion {
     }
 
     /**
-     * EXTRA: Cuenta solo las no leídas (útil para el globo rojo de la campana).
+     * EXTRA: Cuenta solo las no leídas (para el globo rojo)
      */
     public function contarNoLeidas($usuario_id) {
         $query = "SELECT COUNT(*) as total FROM " . $this->tabla . " 

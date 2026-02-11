@@ -1,10 +1,9 @@
 <?php
-/*session_start();
-
+session_start();
 if (!isset($_SESSION['usuario'])) {
     header("Location: inicio_sesion_EasyPiece.php");
     exit;
-}*/
+}
 ?>
 
 <!DOCTYPE html>
@@ -41,57 +40,34 @@ if (!isset($_SESSION['usuario'])) {
             </div>    
         </div> 
     </header>
-    <div class="Contenedor-izquierda">
-        <?php
-            for ($i = 1; $i <= 100; $i++) {
-                echo "
-                <div class='Contenedor-producto'>
-                    <h2 class='Titulo'>Acetamimaifriend {$i}</h2>
-                    <img src='img/medicinas.png' alt='medicina' class='imagen-medicamentos'>
-                    <div class= 'info'>
-                        <span class='titulo-nombre'>Nombre</span>
-                        <span class='info-nombre'>Acteaminofen</span>
-                        <span class='titulo-cantidad'>Cantidad</span>
-                        <span class='info-cantidad'>160mg/5ml-Jarabe</span>
-                        <span class='titulo-laboratorio'>Laboratorio</span>
-                        <span class='info-laboratorio'>MK</span>
-                        <span class='titulo-precio'>Precio</span>
-                        <span class='info-precio'>7000 COP</span>  
-                    </div> 
-                </div>
-                ";
-            }
-        ?>
-    </div> 
+    <div class="Contenedor-izquierda" id="lista-carrito">
+    <p style="padding: 20px;">Cargando productos seleccionados...</p>
+</div>
+
     <div class="Contenedor-derecha"> 
-        <span class='titulo-factura'>SISTEMA DE FACTURACION EASYPIECE</span>
-        <span class='nombre-farmacia'>NOMBRE FARMACIA</span>
-        <span class='direccion-farmacia'>Direccion:</span>
-        <span class='telefono-farmacia'>Telefono:</span>
-        <span class='correo-farmacia'>Correo</span>
-        <span class='numero-factura'>FACTURA NRO 120921</span>
-        <span class='fecha'>Fecha:</span>
-        <span class='cliente'>Cliente:</span>
-        <span class='cedula'>Identificacion:</span>
-        <span class='direccion'>Direccion:</span>
-        <span class='telefono'>Telefono:</span>
+        <div class="factura-header-info" style="display: flex; flex-direction: column; margin-bottom: 20px;">
+            <span class='titulo-factura' style="font-size: 1.5em; font-weight: bold; text-align: center;">SISTEMA DE FACTURACION EASYPIECE</span>
+            <span class='nombre-farmacia' style="font-weight: bold; margin-top: 10px;">NOMBRE FARMACIA</span>
+            <span class='direccion-farmacia'>Dirección: Calle Falsa 123</span>
+            <span class='telefono-farmacia'>Teléfono: 300 000 0000</span>
+            <span class='correo-farmacia'>Correo: contacto@farmacia.com</span>
+        </div>
 
-        <?php
-            for ($i = 1; $i <= 30; $i++) {
-                echo "
-                <div class='Factura-productos'>   
-                    <span class='nombres-presentacion'>Nombre + Presentacion</span>
-                    <span class='cantidad'>Cantidad</span>
-                    <span class='valor-total'>Valor total</span>
-                </div>
-                ";
-            }
-        ?>
-    
+        <div class="factura-cliente-info" style="display: flex; flex-direction: column; gap: 5px; border-top: 1px solid #ccc; padding-top: 10px;">
+            <span class='numero-factura' style="font-weight: bold;">FACTURA NRO: 120921</span>
+            <span class='fecha'>Fecha: <?php echo date("d/m/Y"); ?></span>
+            <span class='cliente'>Cliente: Jacinto Pérez</span>
+            <span class='cedula'>Identificación: 12345678</span>
+            <span class='direccion'>Dirección: Carrera 10 #20-30</span>
+            <span class='telefono'>Teléfono: 311 111 1111</span>
+        </div>
 
-        <div class="Contenedor-derecha-inferior">
-            <button type="button" class="boton-descuento" >Aplicar Descuento</button>
-            <button type="button" class="boton-pagar" >Pagar</button>  
+        <div id="detalle-factura" style="min-height: 100px;">
+            </div>
+
+        <div class="Contenedor-derecha-inferior" style="margin-top: auto; padding-top: 20px; display: flex; gap: 10px; justify-content: center;">
+            <button type="button" class="boton-descuento">Aplicar Descuento</button>
+            <button type="button" class="boton-pagar">Pagar</button>  
         </div> 
     </div>
 
@@ -103,5 +79,6 @@ if (!isset($_SESSION['usuario'])) {
 
 
     <script src="../JS/main.js"></script>
+    <script src="../JS/carrito_compras.js"></script>
 </body>
 </html>

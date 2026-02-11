@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EasyPiece</title>
+    <title>EasyPiece - Perfil</title>
     <link rel="stylesheet" href="CSS/global.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="CSS/perfil.css?v=<?php echo time(); ?>">
 
@@ -19,7 +18,7 @@
         <div class="header-box-pp"> 
             <div class="header-izquierda">
                 <img src="img/EasyPieceLogo.png" alt="Logo" class="header-logo-pp" id="principal">
-                <img src="img/IconoUsuario.png" alt="Usuario" class="header-usuario" id = "usuario">
+                <img src="img/IconoUsuario.png" alt="Usuario" class="header-usuario" id="usuario">
             </div>
             
             <h1 class="header-title-pagina-principal">Perfil</h1>
@@ -28,14 +27,14 @@
             <div class="items-derecha">
                 <img src="img/Buscar.png" alt="Buscar" class="header-buscar" id="buscar-img">
                 <img src="img/Notificaciones.png" alt="Notificaciones" class="header-notificaciones" id="notificaciones">
-                 <img src="img/CarroCompras.png" alt="Carrito" class="header-carrito" id="carrito">
+                <img src="img/CarroCompras.png" alt="Carrito" class="header-carrito" id="carrito">
                 <img src="img/IconoContactanos.png" alt="Icono" class="header-contactanos" id="contactanos">
             </div>    
         </div> 
     </header>
 
-    <div class="opciones-usuario-perfil" id = "op-usuario-perfil">
-        <span id = "info-usuario-clic">Informacion de Usuario</span> 
+    <div class="opciones-usuario-perfil" id="op-usuario-perfil">
+        <span id="info-usuario-clic">Informacion de Usuario</span> 
         <span id="registro-perfil">Registro</span>
         <button id="btn-cerrar-sesion">Cerrar Sesion</button>
     </div>
@@ -62,27 +61,14 @@
             <label for="tarjeta">Tarjeta Asociada</label>
             <span id="editable-trajeta">Tarjeta Asociada</span>
         </div>
-        <button>Editar</button>
-
+        <button id="btn-editar">Editar</button>
     </div>
-    <?php
-    echo '<div class="scroll-registro" id="lista-registro">';
-    for ($i = 1; $i <= 100; $i++) {
-        echo '
-        <div class="contenedor-registro collapsed" >
-            <h2 class="titulo-registro">Compra No# ' . $i . '</h2>
-            <p class="info-registro">
-                Esta es la información número ' . $i . '. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            </p>
-        </div>';
-    }
-    echo '</div>';
-    ?>
+
+    <div class="scroll-registro" id="lista-registro" style="display: none;">
+        <div style="padding: 20px; text-align: center; font-family: 'Chau Philomene One', sans-serif;">
+            Cargando registros...
+        </div>
+    </div>
         
     <script src="../JS/main.js"></script>
     <script src="../JS/perfil.js"></script>

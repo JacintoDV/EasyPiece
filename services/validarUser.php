@@ -37,19 +37,17 @@ $resData = json_decode($response, true);
 
 if ($httpCode === 200 && isset($resData['success']) && $resData['success'] === true) {
     
-    
     $usuario = $resData['usuario'];
 
-    $_SESSION['usuario_id']     = $usuario['codigo'];
-    $_SESSION['usuario_nombre'] = $usuario['nombre'];
-    $_SESSION['usuario_rol']    = $usuario['rol'] ?? 'cliente';
+    $_SESSION['id_usuario'] = $usuario['codigo'];
+    $_SESSION['usuario']    = $usuario['nombre']; 
+    $_SESSION['usuario_rol']= $usuario['rol'] ?? 'cliente';
 
     echo json_encode([
         "success" => true, 
         "mensaje" => $resData['mensaje']
     ]);
-
-} else {
+}else {
     echo json_encode([
         "success" => false, 
         "error" => $resData['mensaje'] ?? "Error en la autenticación"
