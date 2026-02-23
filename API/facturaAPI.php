@@ -1,10 +1,7 @@
 <?php
-header("Content-Type: application/json");
-$conn = new mysqli("localhost", "root", "#J4c1nt0", "EasyPiece");
 
-if ($conn->connect_error) {
-    die(json_encode(["success" => false, "error" => $conn->connect_error]));
-}
+header("Content-Type: application/json");
+require_once __DIR__ . "/../config/conexion.php";
 
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'GET':

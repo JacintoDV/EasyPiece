@@ -13,18 +13,7 @@ ob_start();
 try {
     // 2. Cargar Clase (Usamos ruta absoluta para evitar fallos de carpeta)
     require_once __DIR__ . "/../Clases/Cliente.php";
-
-    // 3. Conexión a la base de datos
-    $host = "localhost";
-    $user = "root";
-    $pass = "#J4c1nt0";
-    $db   = "EasyPiece";
-
-    $conn = new mysqli($host, $user, $pass, $db);
-
-    if ($conn->connect_error) {
-        throw new Exception("Error de conexión: " . $conn->connect_error);
-    }
+    require_once __DIR__ . "/../config/conexion.php";
 
     $metodo = $_SERVER['REQUEST_METHOD'];
     $data = json_decode(file_get_contents("php://input"), true);

@@ -50,7 +50,7 @@ class Cliente {
     }
 
     public function verificarCorreoCoincide($correo, $idUsuario) {
-        $url = "http://localhost/EasyPiece_Nuevo/API/clientesAPI.php?correo=" . urlencode($correo);
+        $url = BASE_URL . "/API/clientesAPI.php?correo=" . urlencode($correo);
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $result = curl_exec($ch);

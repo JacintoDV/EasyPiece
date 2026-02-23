@@ -1,10 +1,6 @@
 <?php
 header("Content-Type: application/json");
-$conn = new mysqli("localhost", "root", "#J4c1nt0", "EasyPiece");
-
-if ($conn->connect_error) {
-    die(json_encode(["success" => false, "error" => $conn->connect_error]));
-}
+require_once __DIR__ . "/../config/conexion.php";
 
 $input = json_decode(file_get_contents("php://input"), true);
 

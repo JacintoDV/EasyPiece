@@ -1,6 +1,12 @@
 <?php
+require_once __DIR__ . "/../config/conexion.php";
 class Factura {
-    private $api_url = "http://localhost/EasyPiece_Nuevo/API/facturaAPI.php";
+    private $api_url;
+
+    public function __construct() {
+        // Al iniciarse la clase, toma la URL base de tu config
+        $this->api_url = BASE_URL . "/API/facturaAPI.php";
+    }
 
     public function listar() {
         $ch = curl_init($this->api_url);

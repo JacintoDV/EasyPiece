@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../Clases/Cliente.php';
+require_once __DIR__ . "/../config/conexion.php";
 
 header('Content-Type: application/json');
 
@@ -17,7 +18,7 @@ if (!$correoPost || !$passPost) {
 }
 
 // 2. Llamada a la API
-$urlApi = "http://localhost/EasyPiece_Nuevo/API/clientesAPI.php";
+$urlApi = BASE_URL . "/API/clientesAPI.php";
 $payload = json_encode([
     "accion" => "login",
     "correo" => $correoPost,

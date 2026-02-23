@@ -6,6 +6,7 @@ require_once __DIR__ . "/../Clases/Factura.php";
 require_once __DIR__ . "/../Clases/Registro.php"; 
 require_once __DIR__ . "/../Clases/Notificacion.php"; 
 require_once __DIR__ . "/../Clases/Producto.php";
+require_once __DIR__ . "/../config/conexion.php";
 
 header('Content-Type: application/json');
 
@@ -26,7 +27,7 @@ if (!$input) {
     exit;
 }
 
-$urlProductos = "http://localhost/EasyPiece_Nuevo/api/productoAPI.php";
+$urlProductos = BASE_URL . "/api/productoAPI.php";
 
 try {
     $errores = [];

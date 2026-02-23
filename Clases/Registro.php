@@ -1,8 +1,12 @@
 <?php
+require_once __DIR__ . "/../config/conexion.php";
 class Registro {
-    // Ajusta la URL según tu carpeta local
-    // CAMBIO 1: Usar IP directa para evitar problemas de resolución de nombre
-    private $api_url = "http://127.0.0.1/EasyPiece_Nuevo/API/registroAPI.php";
+
+    private $api_url;
+
+    public function __construct() {
+        $this->api_url = BASE_URL . "/API/registroAPI.php";
+    }
 
     public function crear($idCliente, $total, $metodoPago = 'Efectivo', $estado = 'Pendiente', $idFactura = null) {
         $datos = [

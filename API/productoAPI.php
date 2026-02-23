@@ -2,7 +2,7 @@
 header("Content-Type: application/json");
 require_once "../Clases/Producto.php"; // IMPORTANTE: Conectar con el archivo de la clase
 
-$conn = new mysqli("localhost", "root", "#J4c1nt0", "EasyPiece");
+require_once __DIR__ . "/../config/conexion.php";
 
 $metodo = $_SERVER['REQUEST_METHOD'];
 

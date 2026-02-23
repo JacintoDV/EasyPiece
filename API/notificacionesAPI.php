@@ -2,40 +2,15 @@
 // Usamos require_once para no duplicar la carga de la clase
 require_once __DIR__ . '/../Clases/Notificacion.php';
 
-// 1. CONEXIÓN A LA BASE DE DATOS
-try {
-    $host = "localhost";
-    $db_name = "easypiece";
-    $user = "root";
-    $pass = "#J4c1nt0";
+require_once __DIR__ . '/../config/conexion.php'; 
 
-    $conexion = new PDO("mysql:host=$host;dbname=$db_name;charset=utf8", $user, $pass);
-    $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    
-    // Hacemos que la conexión esté disponible para la clase globalmente
-    $GLOBALS['conexion'] = $conexion;
-
-} catch (PDOException $e) {
-    // Solo enviamos error JSON si la petición es vía Web
-    if (isset($_SERVER['REQUEST_METHOD'])) {
-        header('Content-Type: application/json');
-        echo json_encode(["success" => false, "error" => "Error de conexion: " . $e->getMessage()]);
-    }
-    exit;
-}
-
-/**
- * 2. LÓGICA DE CONTROLADOR (SWITCH)
- * La clave: Solo se ejecuta si el archivo es llamado directamente.
- * Si es un 'require' desde el Service, este bloque se ignora.
- */
 $es_llamada_directa = (basename($_SERVER['PHP_SELF']) == 'notificacionesAPI.php');
 $metodo = $_SERVER['REQUEST_METHOD'] ?? null;
 
 if ($metodo && $es_llamada_directa) {
     header('Content-Type: application/json');
     
-    // Instanciamos la clase (ella misma pescará la $conexion global)
+    // Instanciamos la clase (usará la $conexion que ya viene de conexion.php)
     $notifControl = new Notificacion();
     
     $json = file_get_contents('php://input');

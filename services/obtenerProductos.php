@@ -2,16 +2,9 @@
 // services/obtenerProductos.php
 header("Content-Type: application/json");
 require_once "../Clases/Producto.php"; // Subimos un nivel para buscar la carpeta Clases
+require_once __DIR__ . "/../config/conexion.php";
 
-// 1. Conexión a la base de datos
-$conn = new mysqli("localhost", "root", "#J4c1nt0", "EasyPiece");
-
-// Verificar si hay error de conexión
-if ($conn->connect_error) {
-    die(json_encode(["error" => "Error de conexión: " . $conn->connect_error]));
-}
-
-// 2. Consulta a la tabla
+// 2. Consulta a la tabla (usamos la variable $conn que vive dentro de conexion.php)
 $sql = "SELECT * FROM productos WHERE estado = 1";
 $result = $conn->query($sql);
 
@@ -34,5 +27,8 @@ if ($result) {
 // 5. Devolvemos el JSON final
 echo json_encode($productosObjetos);
 
-$conn->close();
+// 6. Cerramos la conexión (opcional, pero buena práctica)
+if (isset($conn)) {
+    $conn->close();
+}
 ?>
