@@ -4,17 +4,19 @@ require_once '../Clases/Cliente.php';
 
 header('Content-Type: application/json');
 
+// 1. Capturar datos del JS
 $json = file_get_contents('php://input');
 $data = json_decode($json, true);
 
-$correoPost = isset($data['correo']) ? trim($data['correo']) : (isset($_GET['correo']) ? trim($_GET['correo']) : null);
-$passPost   = isset($data['contrasena']) ? trim($data['contrasena']) : (isset($_GET['contrasena']) ? trim($_GET['contrasena']) : null);
+$correoPost = $data['correo'] ?? null;
+$passPost   = $data['contrasena'] ?? null;
 
 if (!$correoPost || !$passPost) {
-    echo json_encode(["success" => false, "error" => "Por favor, completa todos los campos"]);
+    echo json_encode(["success" => false, "error" => "Email y contraseña requeridos"]);
     exit;
 }
 
+// 2. Llamada a la API
 $urlApi = "http://localhost/EasyPiece_Nuevo/API/clientesAPI.php";
 $payload = json_encode([
     "accion" => "login",
@@ -22,34 +24,48 @@ $payload = json_encode([
     "contrasena" => $passPost
 ]);
 
-
 $ch = curl_init($urlApi);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+
 $response = curl_exec($ch);
 $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+$curlError = curl_error($ch);
 curl_close($ch);
 
+// 3. RASTREADOR: Si la API no responde 200 o hay error de cURL
+if ($httpCode !== 200) {
+    echo json_encode([
+        "success" => false, 
+        "error" => "Error de API (Código $httpCode)",
+        "detalle" => $response, // Esto te mostrará el error de PHP si lo hay
+        "curl_error" => $curlError
+    ]);
+    exit;
+}
 
 $resData = json_decode($response, true);
 
-if ($httpCode === 200 && isset($resData['success']) && $resData['success'] === true) {
+// 4. Validar la lógica del login
+if (isset($resData['success']) && $resData['success'] === true) {
     
     $usuario = $resData['usuario'];
 
-    $_SESSION['id_usuario'] = $usuario['codigo'];
-    $_SESSION['usuario']    = $usuario['nombre']; 
-    $_SESSION['usuario_rol']= $usuario['rol'] ?? 'cliente';
+    // Sincronizamos nombres de sesión con los de la API
+    $_SESSION['usuario_id']     = $usuario['codigo'];
+    $_SESSION['usuario_nombre'] = $usuario['nombre']; 
+    $_SESSION['usuario_rol']    = $usuario['rol'] ?? 'cliente';
 
     echo json_encode([
         "success" => true, 
-        "mensaje" => $resData['mensaje']
+        "mensaje" => "Bienvenido " . $usuario['nombre'],
+        "redireccion" => ($_SESSION['usuario_rol'] === 'admin') ? "admin.php" : "perfil.php"
     ]);
-}else {
+} else {
     echo json_encode([
         "success" => false, 
-        "error" => $resData['mensaje'] ?? "Error en la autenticación"
+        "error" => $resData['mensaje'] ?? "Correo o contraseña incorrectos"
     ]);
 }

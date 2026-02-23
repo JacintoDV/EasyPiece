@@ -1,39 +1,51 @@
 <?php
-// 1. Iniciamos sesión para saber quién es el usuario
+// 1. Iniciamos sesión
 @session_start();
 
 require_once __DIR__ . "/../Clases/Registro.php";
 
 header('Content-Type: application/json');
 
-// 2. Identificamos al usuario (Sesión o el ID de Jacinto por defecto)
-$id_usuario = isset($_SESSION['id_usuario']) ? $_SESSION['id_usuario'] : 123454200;
+// 2. Verificación de seguridad
+$id_usuario = $_SESSION['usuario_id'] ?? null;
+
+if (!$id_usuario) {
+    echo json_encode([
+        "success" => false, 
+        "mensaje" => "Sesión no válida o expirada",
+        "datos" => [] 
+    ]);
+    exit;
+}
 
 try {
-    // 3. Instanciamos la clase y llamamos al método listar
     $modeloRegistro = new Registro();
     $respuesta = $modeloRegistro->listar($id_usuario);
 
-    // 4. Verificamos la respuesta
-    // Nota: Manejamos si la API devuelve el array directo o envuelto en 'datos'
-    $datos = isset($respuesta['datos']) ? $respuesta['datos'] : $respuesta;
-
-    if (is_array($datos)) {
-        echo json_encode([
-            "success" => true,
-            "datos"   => $datos
-        ]);
-    } else {
+    // 3. Manejo inteligente de la respuesta de la API
+    // Si la API devolvió un error (como el que vimos en el test)
+    if (isset($respuesta['error'])) {
         echo json_encode([
             "success" => false,
-            "mensaje" => "No se encontraron registros para este usuario.",
-            "datos"   => []
+            "mensaje" => $respuesta['error'],
+            "datos" => []
         ]);
+    } 
+    // Si la respuesta es un array (vacío o con datos), fue un éxito
+    elseif (is_array($respuesta)) {
+        echo json_encode([
+            "success" => true,
+            "datos"   => $respuesta
+        ]);
+    } 
+    else {
+        throw new Exception("La API devolvió un formato desconocido");
     }
 
 } catch (Exception $e) {
     echo json_encode([
         "success" => false,
-        "error"   => "Error en el Service: " . $e->getMessage()
+        "mensaje" => "Error en el Service: " . $e->getMessage(),
+        "datos" => []
     ]);
 }

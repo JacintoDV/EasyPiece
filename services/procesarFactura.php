@@ -5,14 +5,17 @@
 require_once __DIR__ . "/../Clases/Factura.php"; 
 require_once __DIR__ . "/../Clases/Registro.php"; 
 require_once __DIR__ . "/../Clases/Notificacion.php"; 
+require_once __DIR__ . "/../Clases/Producto.php";
 
 header('Content-Type: application/json');
 
-// Identidad (Sesión o Jacinto por defecto para el test)
-$id_usuario = isset($_SESSION['id_usuario']) ? $_SESSION['id_usuario'] : 123454200;
+// Identidad (Sincronizado con el nombre de sesión del Login)
+$id_usuario = isset($_SESSION['usuario_id']) ? $_SESSION['usuario_id'] : null;
 
+// Validación de seguridad para evitar que se procese sin usuario
 if (!$id_usuario) {
-    echo json_encode(['success' => false, 'error' => 'No se pudo identificar al usuario.']);
+    header('Content-Type: application/json');
+    echo json_encode(["success" => false, "mensaje" => "Sesión no válida"]);
     exit;
 }
 
@@ -22,6 +25,8 @@ if (!$input) {
     echo json_encode(['success' => false, 'error' => 'Carrito vacio o datos invalidos.']);
     exit;
 }
+
+$urlProductos = "http://localhost/EasyPiece_Nuevo/api/productoAPI.php";
 
 try {
     $errores = [];
@@ -33,7 +38,8 @@ try {
     $modeloRegistro = new Registro(); 
     $modeloNotificacion = new Notificacion();
 
-    // 2. Procesamos cada producto
+    
+    //Procesamos cada producto
     foreach ($input as $item) {
         $resultado = $modeloFactura->crear(
             $id_usuario,
@@ -43,6 +49,16 @@ try {
         );
 
         if ($resultado && isset($resultado['success']) && $resultado['success'] == true) {
+            
+
+            $objProducto = new Producto(['codigo' => $item['producto']]);
+            $resStock = $objProducto->actualizarStock($urlProductos, $item['cantidad']);
+            
+            if (!$resStock || !$resStock['success']) {
+                $errores[] = "Error stock en producto " . $item['producto'] . ": " . ($resStock['error'] ?? 'Sin stock');
+                continue; 
+            }
+
             $exitos++;
             $idFacturaReferencia = $resultado['id'];
             
@@ -54,7 +70,6 @@ try {
         }
     }
 
-    // 3. Si todo salio bien en facturacion, creamos el Registro de pago
     if ($exitos > 0 && empty($errores)) {
         
         $totalFinal = ($totalVenta > 0) ? $totalVenta : 0; 
@@ -70,13 +85,9 @@ try {
 
         if ($resRegistro && isset($resRegistro['success']) && $resRegistro['success'] == true) {
             
-            // --- 🔔 MENSAJE DE NOTIFICACIÓN PERSONALIZADO ---
             $mensajeNotif = "Compra realizada Nro: #$idFacturaReferencia. Se realizo un pago por $$totalFmt COP con exito.";
-            
             $modeloNotificacion->crear($id_usuario, $mensajeNotif, 'success');
-            // ------------------------------------------------
 
-            // --- 🚀 RESPUESTA DEL SISTEMA (JSON) ---
             echo json_encode([
                 'success' => true, 
                 'mensaje' => "Compra realizada Nro: #$idFacturaReferencia. El pago de $$totalFmt COP fue procesado correctamente.",

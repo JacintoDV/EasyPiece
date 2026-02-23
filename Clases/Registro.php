@@ -39,15 +39,21 @@ class Registro {
 
     public function listar($idCliente = null) {
         $url = $this->api_url;
-        if ($idCliente) {
-            $url .= "?cliente=" . $idCliente;
+
+        // Si pasamos un ID, lo concatenamos a la URL
+        if (!empty($idCliente)) {
+            // Usamos http_build_query para que cree "?cliente=123454200"
+            $params = ['cliente' => $idCliente];
+            $url .= (strpos($url, '?') === false ? '?' : '&') . http_build_query($params);
         }
 
-        $ch = curl_init($url);
+        // Aquí vendría tu curl_init o file_get_contents
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($ch);
         curl_close($ch);
-        
+
         return json_decode($response, true);
     }
 

@@ -42,24 +42,30 @@
     <div class="contenedor-informacion" id="cont-info">
         <div class="contenedor-izquierda">
             <label for="nombre">Nombre</label>
-            <span>Nombre</span>
+            <span id="perfil-nombre">Cargando...</span>
+            
             <label for="apellido">Apellido</label>
-            <span>Apellido</span>
+            <span id="perfil-apellido">Cargando...</span>
+            
             <label for="telefono">Telefono</label>
-            <span id="editable-telefono">Telefono</span>
+            <span id="editable-telefono">Cargando...</span>
+            
             <label for="correo">Correo</label>
-            <span id="editable-correo">Correo</span>
+            <span id="editable-correo">Cargando...</span>
         </div>
 
         <div class="contenedor-derecha">
             <label for="direccion">Direccion</label>
-            <span id="editable-direccion">Direccion</span>
+            <span id="editable-direccion">Cargando...</span>
+            
             <label for="codigo">Codigo Usuario</label>
-            <span>Codigo Usuario</span>
+            <span id="perfil-codigo">Cargando...</span>
+            
             <label for="fecha">Fecha Nacimiento</label>
-            <span>Fecha Nacimiento</span>
+            <span id="perfil-fecha">Cargando...</span>
+            
             <label for="tarjeta">Tarjeta Asociada</label>
-            <span id="editable-trajeta">Tarjeta Asociada</span>
+            <span id="editable-trajeta">Cargando...</span>
         </div>
         <button id="btn-editar">Editar</button>
     </div>

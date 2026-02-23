@@ -122,5 +122,38 @@ class Producto {
         return $productos;
     }
 
+    public function actualizarStock($urlApi, $cantidadADescontar) {
+        // Preparamos los datos según lo que espera tu case 'PUT'
+        $datos = [
+            "codigo" => $this->codigo,
+            "cantidad" => $cantidadADescontar
+        ];
+        
+        $payload = json_encode($datos);
+
+        $ch = curl_init($urlApi);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        // Configuramos el método personalizado PUT
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT"); 
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($payload)
+        ]);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');
+
+        $result = curl_exec($ch);
+        
+        // Manejo de errores de conexión
+        if (curl_errno($ch)) {
+            $error_msg = curl_error($ch);
+            curl_close($ch);
+            return ["success" => false, "error" => "Error de conexión: $error_msg"];
+        }
+
+        curl_close($ch);
+        return json_decode($result, true);
+    }
+
 }
 ?>

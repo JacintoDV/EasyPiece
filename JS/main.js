@@ -166,26 +166,41 @@ if (registroDos && registroUno){
     registroUno.addEventListener ('click', function(){
         window.location.href = "Perfil.php";
     })
+    registroDos.addEventListener ('click', function(){
+        window.location.href = "Perfil.php";
+    })
 }
 const btnCerrar = document.getElementById('btn-cerrar-sesion');
 
 if (btnCerrar) {
     btnCerrar.addEventListener('click', function() {
-        // 1. Avisamos al servidor que destruya la sesión
-        fetch('../Services/logout.php')
-            .then(response => response.json())
+        // 1. Preguntar antes de continuar
+        const confirmar = confirm("¿Estás seguro que deseas salir?");
+
+        // 2. Si el usuario cancela, detenemos la ejecución aquí
+        if (!confirmar) {
+            return; 
+        }
+
+        // 3. Si aceptó, procedemos con el cierre de sesión
+        fetch('/EasyPiece_Nuevo/services/cerrarSesion.php')
+            .then(response => {
+                if (!response.ok) throw new Error("No se encontró el archivo cerrarSesion.php");
+                return response.json();
+            })
             .then(data => {
                 if (data.success) {
-                    // 2. Limpiamos el historial para que no puedan volver atrás
+                    // Evitar que el usuario regrese con el botón "atrás" del navegador
                     window.history.pushState(null, null, window.location.href);
                     window.onpopstate = function () {
                         window.history.go(1);
                     };
-                    
-                    // 3. Redirigimos al Login
-                    window.location.replace('Inicio_sesion_EasyPiece.php'); 
+                    window.location.replace('/EasyPiece_Nuevo/UI/Inicio_sesion_EasyPiece.php'); 
                 }
             })
-            .catch(error => console.error("Error al cerrar sesión:", error));
+            .catch(error => {
+                console.error("Error al cerrar sesión:", error);
+                window.location.href = '/EasyPiece_Nuevo/UI/Inicio_sesion_EasyPiece.php';
+            });
     });
 }

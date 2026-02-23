@@ -1,191 +1,141 @@
 <?php
-header("Content-Type: application/json");
-require_once "../Clases/Cliente.php";
-// 1. CONFIGURACIÓN ÚNICA DE CONEXIÓN
-$host = "localhost";
-$user = "root";
-$pass = "#J4c1nt0";
-$db   = "EasyPiece";
+// 1. Configuración de cabeceras y errores
+header("Content-Type: application/json; charset=UTF-8");
+session_start();
 
-$conn = new mysqli($host, $user, $pass, $db);
+// Ocultamos errores para que no ensucien el JSON, pero los registramos internamente
+error_reporting(E_ALL);
+ini_set('display_errors', 0); 
 
-if ($conn->connect_error) {
-    die(json_encode(["success" => false, "error" => "Error de conexión: " . $conn->connect_error]));
-}
+// Iniciamos buffer para limpiar cualquier salida accidental (espacios, warnings)
+ob_start();
 
-// 2. DETECTAR EL MÉTODO HTTP
-$metodo = $_SERVER['REQUEST_METHOD'];
+try {
+    // 2. Cargar Clase (Usamos ruta absoluta para evitar fallos de carpeta)
+    require_once __DIR__ . "/../Clases/Cliente.php";
 
-switch ($metodo) {
-    case 'GET':
+    // 3. Conexión a la base de datos
+    $host = "localhost";
+    $user = "root";
+    $pass = "#J4c1nt0";
+    $db   = "EasyPiece";
 
-        if (isset($_GET['correo'])) {
-            $correoProporcionado = $_GET['correo'];
-            
-            $stmt = $conn->prepare("SELECT codigo, nombre, contrasena, rol FROM clientes WHERE correo = ?");
-            $stmt->bind_param("s", $correoProporcionado);
-            $stmt->execute();
-            $resultado = $stmt->get_result();
+    $conn = new mysqli($host, $user, $pass, $db);
 
-            if ($resultado->num_rows > 0) {
-                $usuario = $resultado->fetch_assoc();
-                echo json_encode([
-                    "existe" => true,
-                    "mensaje" => "El correo ya está registrado",
-                    "datos" => $usuario 
-                ]);
-            } else {
-                echo json_encode(["existe" => false, "mensaje" => "Correo disponible"]);
-            }
-            exit; 
+    if ($conn->connect_error) {
+        throw new Exception("Error de conexión: " . $conn->connect_error);
+    }
+
+    $metodo = $_SERVER['REQUEST_METHOD'];
+    $data = json_decode(file_get_contents("php://input"), true);
+    $respuesta = [];
+
+    switch ($metodo) {
+        case 'GET':
+    // Buscar por el código de sesión
+    if (isset($_GET['codigo'])) {
+        $stmt = $conn->prepare("SELECT codigo, nombre, correo, telefono, direccion, fecha_nacimiento, rol FROM clientes WHERE codigo = ?");
+        $stmt->bind_param("i", $_GET['codigo']);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        
+        if ($usuario = $resultado->fetch_assoc()) {
+            $respuesta = ["success" => true, "datos" => $usuario];
         } else {
-            // ESTO ES LO QUE TE FALTA PARA VER LOS DATOS EN THUNDER CLIENT
-            // Si no hay correo en la URL, listamos TODO.
-            $sql = "SELECT * FROM clientes";
-            $res = $conn->query($sql);
-
-            if ($res) {
-                $todos = $res->fetch_all(MYSQLI_ASSOC);
-                echo json_encode($todos);
-            } else {
-                echo json_encode(["error" => "Error en la consulta: " . $conn->error]);
-            }
-            exit;
+            $respuesta = ["success" => false, "mensaje" => "Usuario no encontrado"];
         }
-        break;
-
-    case 'POST':
-        $data = json_decode(file_get_contents("php://input"), true);
-
-        if (!$data) {
-            echo json_encode(["success" => false, "mensaje" => "No se recibieron datos (JSON vacío)"]);
-            exit;
-        }
-
+    } 
+    // Opción B: Tu lógica anterior de verificar si un correo ya existe (para el registro)
+    else if (isset($_GET['correo'])) {
+        $stmt = $conn->prepare("SELECT codigo, nombre, rol FROM clientes WHERE correo = ?");
+        $stmt->bind_param("s", $_GET['correo']);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
         
-        if (isset($data['accion']) && $data['accion'] === 'login') {
-            if (!isset($data['correo']) || !isset($data['contrasena'])) {
-                echo json_encode(["success" => false, "mensaje" => "Faltan credenciales para el login"]);
-                exit;
-            }
-
-            $clienteObj = new Cliente([], $conn); 
-            $usuario = $clienteObj->autenticarDirecto($data['correo'], $data['contrasena']);
-
-            if ($usuario) {
-                $_SESSION['usuario_id']     = $usuario['codigo'];
-                $_SESSION['usuario_nombre'] = $usuario['nombre'];
-                $_SESSION['usuario_rol']    = $usuario['rol'];
-
-                echo json_encode([
-                    "success" => true,
-                    "mensaje" => "Bienvenido " . $usuario['nombre'],
-                    "usuario" => $usuario
-                ]);
-            } else {
-                echo json_encode(["success" => false, "mensaje" => "Correo o contraseña incorrectos"]);
-            }
-            exit;
-        }
-
-        if (!isset($data['codigo']) || empty($data['codigo'])) {
-            echo json_encode(["success" => false, "error" => "Error de Registro: El campo 'codigo' es obligatorio."]);
-            exit;
-        }
-
-        $passHash = $data['contrasena'];
-        $rol = $data['rol'] ?? 'cliente';
-
-        $sql = "INSERT INTO clientes (contrasena, codigo, nombre, correo, direccion, telefono, registro, fecha_nacimiento, rol) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        
-        $stmt = $conn->prepare($sql);
-        
-        $stmt->bind_param("sisssisss", 
-            $passHash, 
-            $data['codigo'], 
-            $data['nombre'], 
-            $data['correo'], 
-            $data['direccion'], 
-            $data['telefono'], 
-            $data['registro'], 
-            $data['fecha_nacimiento'],
-            $rol
-        );
-
-        if ($stmt->execute()) {
-            $_SESSION['usuario_id'] = $data['codigo'];
-            $_SESSION['usuario_nombre'] = $data['nombre'];
-            $_SESSION['usuario_rol'] = $rol;
-
-            echo json_encode([
-                "success" => true, 
-                "mensaje" => "Cliente registrado y sesión iniciada",
-                "session" => $_SESSION 
-            ]);
+        if ($usuario = $resultado->fetch_assoc()) {
+            $respuesta = ["existe" => true, "mensaje" => "El correo ya está registrado", "datos" => $usuario];
         } else {
-            echo json_encode(["success" => false, "error" => "Error en DB: " . $stmt->error]);
+            $respuesta = ["existe" => false, "mensaje" => "Correo disponible"];
         }
-        break;
+    } 
+    // Opción C: Listar todos (Solo si eres admin, por ejemplo)
+    else {
+        $res = $conn->query("SELECT codigo, nombre, correo, rol FROM clientes");
+        $respuesta = $res ? $res->fetch_all(MYSQLI_ASSOC) : ["error" => $conn->error];
+    }
+    break;
 
-    case 'DELETE':
-        // 1. Leer el JSON para obtener el código del cliente a eliminar
-        $data = json_decode(file_get_contents("php://input"), true);
+        case 'POST':
+            if (!$data) {
+                $respuesta = ["success" => false, "mensaje" => "JSON vacío"];
+                break;
+            }
 
-        if (!$data || !isset($data['codigo'])) {
-            http_response_code(400);
-            echo json_encode(["success" => false, "error" => "Se requiere el 'codigo' para eliminar el registro"]);
+            if (isset($data['accion']) && $data['accion'] === 'login') {
+                $clienteObj = new Cliente($conn, []); 
+                $usuario = $clienteObj->autenticarDirecto($data['correo'] ?? '', $data['contrasena'] ?? '');
+                if ($usuario) {
+                    $_SESSION['usuario_id'] = $usuario['codigo'];
+                    $_SESSION['usuario_nombre'] = $usuario['nombre'];
+                    $_SESSION['usuario_rol'] = $usuario['rol'];
+                    $respuesta = ["success" => true, "mensaje" => "Bienvenido", "usuario" => $usuario];
+                } else {
+                    $respuesta = ["success" => false, "mensaje" => "Credenciales incorrectas"];
+                }
+            } else {
+                // REGISTRO
+                $dir = is_numeric($data['direccion']) ? (int)$data['direccion'] : null;
+                $reg = is_numeric($data['registro']) ? (int)$data['registro'] : null;
+
+                // CAMBIO: Hasheamos la contraseña antes de insertarla
+                $passHasheada = password_hash($data['contrasena'], PASSWORD_DEFAULT);
+
+                $sql = "INSERT INTO clientes (contrasena, codigo, nombre, correo, direccion, telefono, registro, fecha_nacimiento, rol) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                if ($stmt = $conn->prepare($sql)) {
+                    $rol = $data['rol'] ?? 'cliente';
+                    // Se usa $passHasheada y mantenemos los tipos (s para correo asegura que no sea 0)
+                    $stmt->bind_param("sissssiss", $passHasheada, $data['codigo'], $data['nombre'], $data['correo'], $dir, $data['telefono'], $reg, $data['fecha_nacimiento'], $rol);
+                    $respuesta = $stmt->execute() ? ["success" => true, "mensaje" => "Registro exitoso"] : ["success" => false, "error" => $stmt->error];
+                }
+            }
             break;
-        }
 
-        $codigo = (int)$data['codigo'];
-
-        // 2. Preparar la sentencia DELETE
-        $stmt = $conn->prepare("DELETE FROM clientes WHERE codigo = ?");
-        $stmt->bind_param("i", $codigo);
-
-        if ($stmt->execute()) {
-            // Verificar si el registro existía y fue borrado
-            if ($stmt->affected_rows > 0) {
-                echo json_encode(["success" => true, "mensaje" => "Cliente eliminado correctamente"]);
+        case 'PUT':
+        $sql = "UPDATE clientes SET correo = ?, direccion = ?, telefono = ?, tarjeta = ? WHERE codigo = ?";
+        
+        if ($stmt = $conn->prepare($sql)) {
+            // "sssss" significa que todos se tratarán como strings (más seguro para teléfonos y tarjetas)
+            // Asegúrate de enviar 'codigo' en el cuerpo del JSON ($data)
+            $stmt->bind_param("ssssi", 
+                $data['correo'], 
+                $data['direccion'], 
+                $data['telefono'], 
+                $data['tarjeta'],
+                $data['codigo']
+            );
+            
+            if ($stmt->execute()) {
+                $respuesta = ["success" => true, "mensaje" => "Perfil actualizado correctamente"];
             } else {
-                echo json_encode(["success" => false, "error" => "No se encontró ningún cliente con ese código"]);
+                $respuesta = ["success" => false, "error" => $stmt->error];
             }
         } else {
-            echo json_encode(["success" => false, "error" => $stmt->error]);
+            $respuesta = ["success" => false, "error" => $conn->error];
         }
         break;
 
-    // --- PUT: UPDATE / ACTUALIZAR ---
-    case 'PUT':
-        $data = json_decode(file_get_contents("php://input"), true);
+        default:
+            http_response_code(405);
+            $respuesta = ["error" => "Método no soportado"];
+            break;
+    }
 
-        $sql = "UPDATE clientes SET nombre = ?, correo = ?, direccion = ?, telefono = ?, fecha_nacimiento = ? 
-                WHERE codigo = ?";
-        
-        $stmt = $conn->prepare($sql);
-        // tipos: s, s, i, i, s, i
-        $stmt->bind_param("ssiisi", 
-            $data['nombre'], 
-            $data['correo'], 
-            $data['direccion'], 
-            $data['telefono'], 
-            $data['fecha_nacimiento'], 
-            $data['codigo']
-        );
+    $conn->close();
 
-        if ($stmt->execute()) {
-            echo json_encode(["success" => true, "mensaje" => "Cliente actualizado"]);
-        } else {
-            echo json_encode(["success" => false, "error" => $stmt->error]);
-        }
-        break;
-
-    default:
-        http_response_code(405);
-        echo json_encode(["error" => "Método no soportado"]);
-        break;
+} catch (Exception $e) {
+    $respuesta = ["success" => false, "error" => $e->getMessage()];
 }
 
-$conn->close();
-?>
+ob_clean(); 
+echo json_encode($respuesta);
+exit;

@@ -13,7 +13,6 @@ function toggleSeleccion(elemento, producto) {
     }
     sessionStorage.setItem('carrito_farmacia', JSON.stringify(carrito));
     console.log("Guardado en sesión:", carrito);
-    console.log("Contenido del carrito:", carrito);
 }
 
 // 3. FUNCIÓN PRINCIPAL DE CARGA
@@ -37,9 +36,15 @@ async function cargarPantallaPrincipal() {
 
         // RENDERIZADO DE PRODUCTOS
         productos.forEach(p => {
-            // Importante: añadimos la clase 'card-producto' y el 'data-codigo'
+            // --- CAMBIOS PARA ESTADO AGOTADO ---
+            const esAgotado = p.texto_stock === "Agotado";
+            const colorEstado = esAgotado ? "#e74c3c" : "#2c3e50"; // Rojo si está agotado
+            const estiloCard = esAgotado ? "opacity: 0.6; cursor: not-allowed;" : "cursor: pointer;";
+
             contenedor.innerHTML += `
-                <div class='contenedor-izquierda card-producto' data-codigo='${p.codigo}'>
+                <div class='contenedor-izquierda card-producto' 
+                     data-codigo='${p.codigo}' 
+                     style='${estiloCard}'>
                     <h2 class='Titulo'>${p.nombre}</h2>
                     <div class='contenedor-abajo'>
                         <img src='img/medicamentos/${p.imagen}' 
@@ -60,7 +65,7 @@ async function cargarPantallaPrincipal() {
                             <p class='titulo-precio'>Precio</p>
                             <p class='info-precio'>${p.precio_formateado} COP</p>
 
-                            <p class='info-cantidad' style='color: #2c3e50; font-weight: bold;'>
+                            <p class='info-cantidad' style='color: ${colorEstado}; font-weight: bold;'>
                                 Estado: ${p.texto_stock}
                             </p>
                         </div>
@@ -71,15 +76,18 @@ async function cargarPantallaPrincipal() {
 
         // --- MANEJO DE EVENTOS (CLIC EN PRODUCTO) ---
         contenedor.addEventListener("click", (e) => {
-            // Buscamos la tarjeta más cercana al clic
             const tarjeta = e.target.closest(".card-producto");
             
             if (tarjeta) {
                 const codigo = tarjeta.getAttribute("data-codigo");
-                // Buscamos los datos del producto en el array que vino del fetch
                 const productoData = productos.find(p => p.codigo == codigo);
                 
                 if (productoData) {
+                    // --- BLOQUEO SI ESTÁ AGOTADO ---
+                    if (productoData.texto_stock === "Agotado") {
+                        alert("Este producto no tiene existencias.");
+                        return; 
+                    }
                     toggleSeleccion(tarjeta, productoData);
                 }
             }

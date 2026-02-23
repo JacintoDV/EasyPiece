@@ -54,6 +54,30 @@ switch ($metodo) {
             echo json_encode(["success" => false, "error" => $stmt->error]);
         }
         break;
+
+        case 'PUT':
+            $input = json_decode(file_get_contents("php://input"), true);
+            
+            
+            $sql = "UPDATE productos SET cantidad = cantidad - ? WHERE codigo = ? AND cantidad >= ?";
+            
+            $stmt = $conn->prepare($sql);
+            $codigo = $input['codigo'];
+            $cantidad = $input['cantidad'];
+
+            // Pasamos la cantidad dos veces: una para restar y otra para la validación del WHERE
+            $stmt->bind_param("iii", $cantidad, $codigo, $cantidad);
+
+            if ($stmt->execute()) {
+                if ($stmt->affected_rows > 0) {
+                    echo json_encode(["success" => true, "mensaje" => "Stock actualizado"]);
+                } else {
+                    echo json_encode(["success" => false, "error" => "Stock insuficiente o código no encontrado"]);
+                }
+            } else {
+                echo json_encode(["success" => false, "error" => $stmt->error]);
+            }
+            break;
 }
 $conn->close();
 ?>

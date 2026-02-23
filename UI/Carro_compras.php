@@ -1,6 +1,7 @@
 <?php
 session_start();
-if (!isset($_SESSION['usuario'])) {
+// Cambiamos 'usuario' por 'usuario_id', que es el que definimos en el Login
+if (!isset($_SESSION['usuario_id'])) {
     header("Location: inicio_sesion_EasyPiece.php");
     exit;
 }

@@ -1,135 +1,119 @@
-// ¿Ejecuta cuando carga la página
 document.addEventListener("DOMContentLoaded", () => {
     const msg = document.getElementById("msg");
+    const boton = document.getElementById('btnRegistrar');
 
-
+    // Inicializar calendario
     flatpickr("#fecha", {
-        dateFormat: "Y-m-d",   // Compatible con MySQL
+        dateFormat: "Y-m-d", // Formato estándar MySQL
         allowInput: true,
-        locale: {
-            firstDayOfWeek: 1
-        }
+        locale: { firstDayOfWeek: 1 }
     });
 
-
+    // Función para mostrar/ocultar contraseña
     function togglePassword(inputId, btnId) {
         const input = document.getElementById(inputId);
         const btn = document.getElementById(btnId);
+        if(!input || !btn) return;
 
         btn.addEventListener("click", () => {
-            if (input.type === "password") {
-                input.type = "text";   // muesta la PW
-            } else {
-                input.type = "password"; // oculta la PW
-            }
+            input.type = (input.type === "password") ? "text" : "password";
         });
     }
 
     togglePassword("contrasena", "mostrarPW");
     togglePassword("contrasenados", "mostrarPWdos");
 
+    // Recolectar datos del formulario
     function obtenerDatos() {
-    return {
-        nombres: document.getElementById('nombre').value,
-        apellidos: document.getElementById('apellidos').value,
-        correo: document.getElementById('correo').value,
-        id: document.getElementById('id').value,
-        telefono: document.getElementById('telefono').value, 
-        contrasena: document.getElementById('contrasena').value,
-        contrasenados: document.getElementById('contrasenados').value,
-        fecha: document.getElementById('fecha').value
-    };
-}
-
-
-function validarEspacioBlancos() {
-    const d = obtenerDatos();
-    // Verificamos si alguno está vacío
-    if (d.nombres.trim() === "" || d.apellidos.trim() === "" || d.correo.trim() === "" || 
-        d.id.trim() === "" || d.telefono.trim() === "" || d.fecha.trim() === "" || 
-        d.contrasena.trim() === "" || d.contrasenados.trim() === "") {
-        
-        alert("Por favor, complete todos los campos");
-        return false;
+        return {
+            accion: "registro", // Indispensable para que el Service use POST
+            nombres: document.getElementById('nombre').value.trim(),
+            apellidos: document.getElementById('apellidos').value.trim(),
+            correo: document.getElementById('correo').value.trim(),
+            id: document.getElementById('id').value.trim(),
+            telefono: document.getElementById('telefono').value.trim(), 
+            contrasena: document.getElementById('contrasena').value,
+            contrasenados: document.getElementById('contrasenados').value,
+            fecha: document.getElementById('fecha').value
+        };
     }
-    return true;
-}
 
-
-function compararInputs() {
-    const v1 = document.getElementById('contrasena').value.trim();
-    const v2 = document.getElementById('contrasenados').value.trim();
-
-    if (v1 === "" || v2 === "") {
-        msg.textContent = "Complete ambas contraseñas";
-        msg.style.color = "red";
-        return false;
-    }
-    if (v1 !== v2) {
-        msg.textContent = "Las contraseñas no coinciden";
-        msg.style.color = "red";
-        return false;
-    }
-    msg.textContent = ""; // Limpiamos mensaje si todo está bien
-    return true;
-}
-
-
-function validarFormatoCorreo(correo) {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!regex.test(correo)) {
-        alert("El formato del correo es inválido");
-        return false;
-    }
-    return true;
-}
-async function enviarDatosAlServidor(datos) {
-    try {
-        const response = await fetch('/EasyPiece_Nuevo/services/enviarDatosUsers.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(datos)
-        });
-
-        const resultado = await response.json();
-        
-        if (resultado.success) {
-            alert("¡Registro exitoso!");
-            // Aquí puedes limpiar el formulario o redirigir
-        } else {
-            alert("Error: " + resultado.error);
+    function validarEspacioBlancos(d) {
+        if (Object.values(d).some(value => value === "")) {
+            alert("Por favor, complete todos los campos");
+            return false;
         }
-    } catch (error) {
-        console.error("Error crítico:", error);
+        return true;
     }
-}
 
-const boton = document.getElementById('btnRegistrar');
+    function compararInputs(d) {
+        if (d.contrasena !== d.contrasenados) {
+            msg.textContent = "Las contraseñas no coinciden";
+            msg.style.color = "red";
+            return false;
+        }
+        msg.textContent = "";
+        return true;
+    }
 
-boton.addEventListener('click', async () => {
-    if (validarEspacioBlancos()) {
-        if (compararInputs()) {
-            const datos = obtenerDatos();
-            if (validarFormatoCorreo(datos.correo)) {
-                boton.disabled = true;
-                boton.textContent = "Registrando...";
+    function validarFormatoCorreo(correo) {
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!regex.test(correo)) {
+            alert("El formato del correo es inválido");
+            return false;
+        }
+        return true;
+    }
 
-                // Llamamos a la función que definimos antes
-                await enviarDatosAlServidor(datos);
+    async function enviarDatosAlServidor(datos) {
+        try {
+            const response = await fetch('/EasyPiece_Nuevo/services/enviarDatosUsers.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(datos)
+            });
 
-                // Reabilitamos el botón después de terminar
-                boton.disabled = false;
-                boton.textContent = "Registrar Cliente";
-                
+            // Manejo de respuesta no-JSON (Errores 500 o texto)
+            const texto = await response.text();
+            let resultado;
+            try {
+                resultado = JSON.parse(texto);
+            } catch (e) {
+                console.error("Respuesta no válida del servidor:", texto);
+                throw new Error("El servidor respondió con un formato incorrecto.");
+            }
+            
+            if (resultado.success) {
+                alert("¡Registro exitoso!");
+                // Opcional: window.location.href = "login.php";
+            } else {
+                alert("Error: " + (resultado.error || resultado.mensaje));
+            }
+        } catch (error) {
+            console.error("Error crítico:", error);
+            alert("Hubo un problema al conectar con el servidor.");
+        }
+    }
+
+    // Evento principal
+    boton.addEventListener('click', async () => {
+        const datos = obtenerDatos();
+
+        if (validarEspacioBlancos(datos)) {
+            if (compararInputs(datos)) {
+                if (validarFormatoCorreo(datos.correo)) {
+                    
+                    // Bloqueo de UI
+                    boton.disabled = true;
+                    boton.textContent = "Registrando...";
+
+                    await enviarDatosAlServidor(datos);
+
+                    // Desbloqueo de UI
+                    boton.disabled = false;
+                    boton.textContent = "Registrar Cliente";
+                }
             }
         }
-    }
+    });
 });
-
-    
-
-    
-
-
-});
-
